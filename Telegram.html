@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Telegram Web Ultra</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg-app: #17212b;
+  --bg-chat: #0e1621;
+  --bg-search: #242f3d;
+  --bg-hover: #202b36;
+  --bg-incoming: #182533;
+  --bg-outgoing: #2b5278;
+  --bg-card: #1e2c3a;
+  --text-primary: #ffffff;
+  --text-secondary: #6d7f8f;
+  --text-tertiary: #4a5c6d;
+  --accent: #5eb5f7;
+  --green: #4dcd5e;
+  --red: #e53935;
+  --orange: #ff9800;
+  --badge-unread: #5eb5f7;
+  --badge-muted: #3e546a;
+  --drawer-width: 290px;
+}
+body.light-theme {
+  --bg-app: #ffffff;
+  --bg-chat: #8b99a7;
+  --bg-search: #f1f1f1;
+  --bg-hover: #f4f4f5;
+  --bg-incoming: #ffffff;
+  --bg-outgoing: #eeffde;
+  --bg-card: #f9f9f9;
+  --text-primary: #000000;
+  --text-secondary: #707579;
+  --text-tertiary: #a2a2a2;
+  --accent: #3390ec;
+  --green: #40a7e3;
+  --red: #df3f40;
+  --badge-unread: #3390ec;
+  --badge-muted: #a2a2a2;
+}
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #000;
+  color: var(--text-primary);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+body { display: flex; justify-content: center; }
+.telegram-app {
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg-app);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* HEADERS */
+.main-header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: var(--bg-app);
+  flex-shrink: 0;
+  z-index: 20;
+}
+.main-header h1 {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.icon-btn:active { background: rgba(255,255,255,0.08); }
+.icon-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+/* SEARCH BAR */
+.search-bar {
+  padding: 0 12px 8px;
+  flex-shrink: 0;
+  background: var(--bg-app);
+  z-index: 20;
+}
+.search-input-wrap {
+  background: var(--bg-search);
+  border-radius: 10px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+.search-input-wrap svg { width: 18px; height: 18px; fill: var(--text-secondary); flex-shrink: 0; }
+.search-input-wrap input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 15px;
+  margin-left: 8px;
+}
+.search-input-wrap input::placeholder { color: var(--text-secondary); }
+
+/* FOLDER TABS */
+.folder-tabs {
+  display: flex;
+  gap: 24px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--bg-app);
+  flex-shrink: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.folder-tabs::-webkit-scrollbar { display: none; }
+.folder-tab {
+  padding: 10px 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  transition: color 0.15s;
+}
+.folder-tab.active { color: var(--accent); }
+.folder-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+}
+
+/* MAIN CONTENT CONTAINER */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 70px;
+}
+.content::-webkit-scrollbar { width: 0; }
+
+/* CHAT LIST ITEMS */
+.chat-list { display: flex; flex-direction: column; }
+.chat-item {
+  display: flex;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  align-items: center;
+  gap: 12px;
+}
+.chat-item:active { background: var(--bg-hover); }
+.avatar-wrap { position: relative; flex-shrink: 0; }
+.avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.avatar.small { width: 44px; height: 44px; font-size: 16px; }
+.avatar.tiny { width: 36px; height: 36px; font-size: 13px; }
+.avatar.large { width: 84px; height: 84px; font-size: 30px; }
+.online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--green);
+  border: 2px solid var(--bg-app);
+}
+.chat-body { flex: 1; min-width: 0; }
+.chat-row1 { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+.chat-name {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+.verified-badge { width: 16px; height: 16px; flex-shrink: 0; fill: var(--accent); }
+.mute-icon, .pin-icon { width: 14px; height: 14px; fill: var(--text-secondary); flex-shrink: 0; }
+.pin-icon { transform: rotate(45deg); }
+.chat-time { font-size: 12px; color: var(--text-secondary); margin-left: auto; }
+.chat-time.unread { color: var(--accent); }
+.chat-row2 { display: flex; align-items: center; gap: 6px; }
+.chat-preview {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--badge-unread);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.badge.muted { background: var(--badge-muted); }
+
+/* FLOATING ACTION BUTTON */
+.fab {
+  position: absolute;
+  bottom: 76px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(94,181,247,0.4);
+  z-index: 15;
+  transition: transform 0.15s;
+}
+.fab:active { transform: scale(0.92); }
+.fab svg { width: 24px; height: 24px; fill: #fff; }
+
+/* BOTTOM NAVIGATION */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--bg-app);
+  display: flex;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  z-index: 20;
+}
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+}
+.nav-btn.active { color: var(--accent); }
+.nav-btn svg { width: 24px; height: 24px; fill: currentColor; }
+.nav-badge {
+  position: absolute;
+  top: 4px;
+  right: calc(50% - 18px);
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-app);
+}
+
+/* SIDE DRAWER NAVIGATION */
+.drawer-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+  z-index: 90;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+.side-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--drawer-width);
+  background: var(--bg-app);
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.side-drawer.open { transform: translateX(0); }
+.drawer-header {
+  padding: 20px 16px 16px;
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.drawer-user-info { display: flex; align-items: center; gap: 12px; }
+.drawer-user-name { font-size: 16px; font-weight: 600; }
+.drawer-user-phone { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 13px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.drawer-item:active { background: var(--bg-hover); }
+.drawer-item svg { width: 22px; height: 22px; fill: var(--text-secondary); flex-shrink: 0; }
+.drawer-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
+
+/* TOGGLE SWITCH COMPONENT */
+.toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--bg-search);
+  position: relative;
+  transition: background 0.2s;
+  cursor: pointer;
+  margin-left: auto;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.toggle.on { background: var(--accent); }
+.toggle.on::after { transform: translateX(16px); }
+
+/* CHAT VIEW SCREEN */
+.chat-screen, .sub-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-chat);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.2s cubic-bezier(0,0,0.2,1);
+}
+.sub-screen { background: var(--bg-app); z-index: 70; }
+@keyframes slideIn {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.chat-header {
+  height: 56px;
+  background: var(--bg-app);
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  gap: 4px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.chat-header-info { flex: 1; margin-left: 6px; min-width: 0; cursor: pointer; }
+.chat-header-name {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-header-status { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+.chat-header-status.online { color: var(--accent); }
+
+/* MESSAGES CONTAINER */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.messages::-webkit-scrollbar { width: 0; }
+.date-separator {
+  align-self: center;
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin: 8px 0;
+  font-weight: 500;
+}
+.msg {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 15px;
+  line-height: 1.35;
+  word-wrap: break-word;
+  position: relative;
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.msg.incoming { background: var(--bg-incoming); align-self: flex-start; border-bottom-left-radius: 2px; }
+.msg.outgoing { background: var(--bg-outgoing); align-self: flex-end; border-bottom-right-radius: 2px; }
+.msg-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+  margin-left: 10px;
+  float: right;
+  margin-top: 4px;
+}
+.msg-checks { width: 14px; height: 14px; fill: var(--accent); }
+.msg-reaction-bar {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+.msg-reaction {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+/* CHAT INPUT PANEL */
+.chat-input-area {
+  background: var(--bg-app);
+  padding: 6px 8px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.chat-input-wrap {
+  flex: 1;
+  background: var(--bg-search);
+  border-radius: 20px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 14px;
+}
+.chat-input-wrap input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 15px;
+  padding: 10px 0;
+}
+.send-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.send-btn svg { width: 20px; height: 20px; fill: #fff; }
+
+/* ATTACHMENT MENU MODAL */
+.attach-menu {
+  position: absolute;
+  bottom: 60px;
+  left: 10px;
+  right: 10px;
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  z-index: 80;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.attach-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.attach-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.attach-icon svg { width: 24px; height: 24px; fill: #fff; }
+
+/* CALL OVERLAY */
+.call-overlay {
+  position: absolute;
+  inset: 0;
+  background: #0f1721;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 40px;
+}
+.call-controls { display: flex; gap: 24px; }
+.call-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.call-btn.end { background: var(--red); }
+.call-btn.opt { background: rgba(255,255,255,0.15); }
+.call-btn svg { width: 26px; height: 26px; fill: #fff; }
+
+/* SETTINGS MENUS & GENERAL LIST ITEMS */
+.menu-group { margin-bottom: 12px; background: var(--bg-app); }
+.menu-group-title {
+  padding: 12px 16px 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--bg-app);
+}
+.menu-item:active { background: var(--bg-hover); }
+.menu-item svg { width: 24px; height: 24px; fill: var(--text-secondary); flex-shrink: 0; }
+.menu-item .menu-value { margin-left: auto; color: var(--accent); font-size: 14px; }
+
+/* MODAL / DIALOG POPUP */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-card {
+  width: 100%;
+  max-width: 320px;
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 20px;
+}
+.modal-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+.modal-opt {
+  padding: 12px 0;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="telegram-app" id="app">
+  <!-- SIDE DRAWER OVERLAY -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <aside class="side-drawer" id="sideDrawer">
+    <div class="drawer-header">
+      <div class="drawer-user-info">
+        <div class="avatar" style="background:linear-gradient(135deg,#82b1ff,#665fff);">ME</div>
+        <div>
+          <div class="drawer-user-name">Alex Telegram</div>
+          <div class="drawer-user-phone">+1 (555) 019-2834</div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-item" onclick="openNewGroupModal()"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>New Group</div>
+    <div class="drawer-item" onclick="openNewChannelModal()"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>New Channel</div>
+    <div class="drawer-item" onclick="switchTab('contacts');closeDrawer();"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Contacts</div>
+    <div class="drawer-item" onclick="alert('Calls Log: No recent missed calls.')"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Calls</div>
+    <div class="drawer-item" onclick="openChat('saved');closeDrawer();"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>Saved Messages</div>
+    <div class="drawer-item" onclick="switchTab('settings');closeDrawer();"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35C8.66 5.59 8.12 5.92 7.63 6.29L5.24 5.33c-.22-.08-.47 0-.59.22L2.73 8.87C2.62 9.08 2.66 9.34 2.86 9.48l2.03 1.58C4.84 11.36 4.8 11.69 4.8 12s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58z"/></svg>Settings</div>
+    <div class="drawer-item" onclick="toggleNightMode()">
+      <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/></svg>
+      Night Mode
+      <div class="toggle" id="nightToggle"></div>
+    </div>
+    <div class="drawer-divider"></div>
+    <div class="drawer-item" onclick="openSubScreen('Telegram Premium', getPremiumHTML())"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/></svg>Telegram Premium</div>
+  </aside>
+
+  <!-- MAIN APP HEADER -->
+  <div class="main-header">
+    <button class="icon-btn" onclick="openDrawer()">
+      <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </button>
+    <h1 id="mainTitle">Telegram</h1>
+    <button class="icon-btn" onclick="toggleSearchFocus()">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    </button>
+  </div>
+
+  <!-- SEARCH INPUT BAR -->
+  <div class="search-bar" id="searchBar">
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="searchInput" placeholder="Search chats, messages..." oninput="handleSearch(this.value)">
+    </div>
+  </div>
+
+  <!-- FOLDER TABS BAR -->
+  <div class="folder-tabs" id="folderTabs"></div>
+
+  <!-- MAIN SCROLLABLE CONTENT AREA -->
+  <main class="content" id="content"></main>
+
+  <!-- FLOATING ACTION BUTTON -->
+  <button class="fab" id="fab" onclick="openNewGroupModal()">
+    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+  </button>
+
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="chats" onclick="switchTab('chats')">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      Chats
+      <span class="nav-badge" id="navBadge">0</span>
+    </button>
+    <button class="nav-btn" data-tab="contacts" onclick="switchTab('contacts')">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      Contacts
+    </button>
+    <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35C8.66 5.59 8.12 5.92 7.63 6.29L5.24 5.33c-.22-.08-.47 0-.59.22L2.73 8.87C2.62 9.08 2.66 9.34 2.86 9.48l2.03 1.58C4.84 11.36 4.8 11.69 4.8 12s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58z"/></svg>
+      Settings
+    </button>
+  </nav>
+</div>
+
+<script>
+// ==================== STATE MANAGEMENT ====================
+let allChats = [];
+let currentTab = 'chats';
+let currentFilter = 'all';
+let currentSearch = '';
+let currentChatId = null;
+let messageStore = {};
+let isNightMode = true;
+
+const AVATAR_GRADIENTS = [
+  ['#ff885e', '#ff516a'], ['#ffcd6a', '#ffa85c'], ['#82b1ff', '#665fff'],
+  ['#a0e05a', '#6abf00'], ['#ff86c8', '#ff4da6'], ['#d59fff', '#a94dff']
+];
+const FIRST_NAMES = ['Emma','James','Olivia','Liam','Sophia','Noah','Ava','Lucas','Mia','Ethan','Elena','Dawud','Yonas'];
+const LAST_NAMES = ['Watson','Smith','Johnson','Brown','Lee','Davis','Miller','Wilson','Taylor','Anderson'];
+const GROUPS = ['Family ❤️','Work Team','Gaming Squad','Tech Community','Crypto Signals','Design Core'];
+const CHANNELS = ['Telegram News','TechCrunch','Hacker News','Daily Science','Design Digest'];
+
+// Initialize Mock Data
+function initChats() {
+  allChats.push({
+    id: 'saved', type: 'saved', name: 'Saved Messages',
+    preview: 'Tap to store notes, files and media',
+    time: '12:00', unread: 0, pinned: true, online: false,
+    gradient: ['#82b1ff','#665fff'], muted: false
+  });
+
+  for (let i = 1; i <= 60; i++) {
+    const isUser = i % 2 === 0;
+    const name = isUser 
+      ? FIRST_NAMES[i % FIRST_NAMES.length] + ' ' + LAST_NAMES[i % LAST_NAMES.length]
+      : (i % 3 === 0 ? GROUPS[i % GROUPS.length] : CHANNELS[i % CHANNELS.length]);
+    const type = isUser ? 'user' : (i % 3 === 0 ? 'group' : 'channel');
+    
+    allChats.push({
+      id: String(i),
+      type: type,
+      name: name,
+      preview: 'Hey! Check out this new Telegram update feature.',
+      time: `${(i%12)+1}:15`,
+      unread: i % 4 === 0 ? (i % 3 + 1) : 0,
+      pinned: i < 3,
+      online: isUser && i % 3 === 0,
+      muted: i % 5 === 0,
+      gradient: AVATAR_GRADIENTS[i % AVATAR_GRADIENTS.length]
+    });
+  }
+}
+initChats();
+
+// ==================== RENDERING CORE ====================
+function avatarHtml(chat, size = '') {
+  const grad = `linear-gradient(135deg, ${chat.gradient[0]}, ${chat.gradient[1]})`;
+  const initials = chat.type === 'saved' ? '★' : chat.name.substring(0, 2).toUpperCase();
+  const onlineDot = chat.online ? '<span class="online-dot"></span>' : '';
+  return `<div class="avatar-wrap">
+    <div class="avatar ${size}" style="background:${grad}">${initials}</div>
+    ${onlineDot}
+  </div>`;
+}
+
+function renderChats() {
+  const filtered = allChats.filter(c => {
+    if (currentFilter === 'unread' && c.unread === 0) return false;
+    if (currentFilter === 'personal' && c.type !== 'user') return false;
+    if (currentFilter === 'groups' && c.type !== 'group') return false;
+    if (currentFilter === 'channels' && c.type !== 'channel') return false;
+    if (currentSearch) {
+      const q = currentSearch.toLowerCase();
+      return c.name.toLowerCase().includes(q) || c.preview.toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  const totalUnread = allChats.reduce((acc, cur) => acc + cur.unread, 0);
+  const badgeEl = document.getElementById('navBadge');
+  if (totalUnread > 0) {
+    badgeEl.style.display = 'flex';
+    badgeEl.textContent = totalUnread;
+  } else {
+    badgeEl.style.display = 'none';
+  }
+
+  if (filtered.length === 0) {
+    document.getElementById('content').innerHTML = `<div style="text-align:center;padding:50px;color:var(--text-secondary)">No messages found</div>`;
+    return;
+  }
+
+  document.getElementById('content').innerHTML = `<div class="chat-list">${
+    filtered.map(c => `
+      <div class="chat-item" onclick="openChat('${c.id}')">
+        ${avatarHtml(c)}
+        <div class="chat-body">
+          <div class="chat-row1">
+            <span class="chat-name">${c.name}</span>
+            ${c.muted ? '<svg class="mute-icon" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>' : ''}
+            <span class="chat-time ${c.unread > 0 ? 'unread' : ''}">${c.time}</span>
+          </div>
+          <div class="chat-row2">
+            <span class="chat-preview">${c.preview}</span>
+            ${c.unread > 0 ? `<span class="badge ${c.muted ? 'muted' : ''}">${c.unread}</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('')
+  }</div>`;
+}
+
+function renderFolders() {
+  const folders = [
+    { key: 'all', label: 'All' },
+    { key: 'personal', label: 'Personal' },
+    { key: 'unread', label: 'Unread' },
+    { key: 'groups', label: 'Groups' },
+    { key: 'channels', label: 'Channels' }
+  ];
+  document.getElementById('folderTabs').innerHTML = folders.map(f => `
+    <div class="folder-tab ${currentFilter === f.key ? 'active' : ''}" onclick="setFilter('${f.key}')">${f.label}</div>
+  `).join('');
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  renderFolders();
+  renderChats();
+}
+
+function handleSearch(val) {
+  currentSearch = val;
+  renderChats();
+}
+
+// ==================== CHAT VIEW INTERACTION ====================
+function openChat(id) {
+  const chat = allChats.find(c => c.id === id);
+  if (!chat) return;
+  currentChatId = id;
+  chat.unread = 0;
+
+  if (!messageStore[id]) {
+    messageStore[id] = [
+      { text: 'Hello! Welcome to the new Telegram UI.', out: false, time: '10:00 AM' },
+      { text: 'This looks super smooth! Awesome job.', out: true, time: '10:02 AM' }
+    ];
+  }
+
+  const screen = document.createElement('div');
+  screen.className = 'chat-screen';
+  screen.id = 'activeChatScreen';
+  screen.innerHTML = `
+    <div class="chat-header">
+      <button class="icon-btn" onclick="closeChat()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      ${avatarHtml(chat, 'tiny')}
+      <div class="chat-header-info" onclick="openUserInfo('${chat.name}')">
+        <div class="chat-header-name">${chat.name}</div>
+        <div class="chat-header-status ${chat.online ? 'online' : ''}">${chat.online ? 'online' : 'last seen recently'}</div>
+      </div>
+      <button class="icon-btn" onclick="startCall('${chat.name}')"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
+    </div>
+    <div class="messages" id="chatMessages">
+      <div class="date-separator">TODAY</div>
+      ${renderChatMessages(id)}
+    </div>
+    <div id="attachMenu" class="attach-menu hidden">
+      <div class="attach-opt" onclick="sendAttachment('Gallery Image')"><div class="attach-icon" style="background:#007aff"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>Photo</div>
+      <div class="attach-opt" onclick="sendAttachment('Document.pdf')"><div class="attach-icon" style="background:#00c7be"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>File</div>
+      <div class="attach-opt" onclick="sendAttachment('Location Pin')"><div class="attach-icon" style="background:#ff9500"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>Location</div>
+      <div class="attach-opt" onclick="sendAttachment('Contact Info')"><div class="attach-icon" style="background:#ff2d55"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Contact</div>
+    </div>
+    <div class="chat-input-area">
+      <button class="icon-btn" onclick="toggleAttachmentMenu()"><svg viewBox="0 0 24 24"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg></button>
+      <div class="chat-input-wrap">
+        <input type="text" id="chatInput" placeholder="Message" onkeydown="if(event.key==='Enter') sendMsg()">
+      </div>
+      <button class="send-btn" onclick="sendMsg()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+    </div>
+  `;
+  document.getElementById('app').appendChild(screen);
+  scrollMessagesBottom();
+  renderChats();
+}
+
+function renderChatMessages(id) {
+  const msgs = messageStore[id] || [];
+  return msgs.map(m => `
+    <div class="msg ${m.out ? 'outgoing' : 'incoming'}">
+      ${m.text}
+      <span class="msg-meta">${m.time}</span>
+    </div>
+  `).join('');
+}
+
+function sendMsg() {
+  const inp = document.getElementById('chatInput');
+  if (!inp || !inp.value.trim() || !currentChatId) return;
+  const text = inp.value.trim();
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  messageStore[currentChatId].push({ text, out: true, time });
+  inp.value = '';
+  
+  const chat = allChats.find(c => c.id === currentChatId);
+  if (chat) { chat.preview = 'You: ' + text; chat.time = time; }
+  
+  document.getElementById('chatMessages').innerHTML = `<div class="date-separator">TODAY</div>` + renderChatMessages(currentChatId);
+  scrollMessagesBottom();
+  renderChats();
+
+  // Automated Echo Response Simulated
+  setTimeout(() => {
+    if (currentChatId) {
+      messageStore[currentChatId].push({ text: 'Received: ' + text, out: false, time });
+      if (document.getElementById('chatMessages')) {
+        document.getElementById('chatMessages').innerHTML = `<div class="date-separator">TODAY</div>` + renderChatMessages(currentChatId);
+        scrollMessagesBottom();
+      }
+    }
+  }, 1200);
+}
+
+function toggleAttachmentMenu() {
+  document.getElementById('attachMenu').classList.toggle('hidden');
+}
+
+function sendAttachment(type) {
+  toggleAttachmentMenu();
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  messageStore[currentChatId].push({ text: `📎 [${type}] Attachment`, out: true, time });
+  document.getElementById('chatMessages').innerHTML = `<div class="date-separator">TODAY</div>` + renderChatMessages(currentChatId);
+  scrollMessagesBottom();
+}
+
+function closeChat() {
+  const s = document.getElementById('activeChatScreen');
+  if (s) s.remove();
+  currentChatId = null;
+}
+
+function scrollMessagesBottom() {
+  const area = document.getElementById('chatMessages');
+  if (area) area.scrollTop = area.scrollHeight;
+}
+
+// ==================== SETTINGS & SUB-SCREENS ====================
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  
+  const searchBar = document.getElementById('searchBar');
+  const folderTabs = document.getElementById('folderTabs');
+  const fab = document.getElementById('fab');
+  const title = document.getElementById('mainTitle');
+  
+  searchBar.classList.toggle('hidden', tab !== 'chats');
+  folderTabs.classList.toggle('hidden', tab !== 'chats');
+  fab.classList.toggle('hidden', tab !== 'chats');
+
+  if (tab === 'chats') {
+    title.textContent = 'Telegram';
+    renderFolders();
+    renderChats();
+  } else if (tab === 'contacts') {
+    title.textContent = 'Contacts';
+    renderContactsTab();
+  } else if (tab === 'settings') {
+    title.textContent = 'Settings';
+    renderSettingsTab();
+  }
+}
+
+function renderContactsTab() {
+  const users = allChats.filter(c => c.type === 'user');
+  document.getElementById('content').innerHTML = `
+    <div style="padding:10px 16px;color:var(--accent);font-weight:600;">CONTACTS (${users.length})</div>
+    ${users.map(u => `
+      <div class="menu-item" onclick="openChat('${u.id}')">
+        ${avatarHtml(u, 'small')}
+        <div style="margin-left:12px">
+          <div style="font-weight:600">${u.name}</div>
+          <div style="font-size:12px;color:var(--text-secondary)">${u.online ? 'online' : 'last seen recently'}</div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function renderSettingsTab() {
+  document.getElementById('content').innerHTML = `
+    <div style="display:flex;align-items:center;padding:16px;gap:16px;background:var(--bg-card);margin:10px;border-radius:12px;">
+      <div class="avatar large" style="background:linear-gradient(135deg,#82b1ff,#665fff);">ME</div>
+      <div>
+        <div style="font-size:18px;font-weight:600">Alex Telegram</div>
+        <div style="font-size:13px;color:var(--text-secondary)">+1 (555) 019-2834</div>
+        <div style="font-size:13px;color:var(--accent)">@alex_telegram</div>
+      </div>
+    </div>
+    
+    <div class="menu-group">
+      <div class="menu-group-title">Settings Options</div>
+      <div class="menu-item" onclick="openSubScreen('Edit Profile', getEditProfileHTML())">Edit Profile</div>
+      <div class="menu-item" onclick="openSubScreen('Privacy & Security', getPrivacyHTML())">Privacy and Security</div>
+      <div class="menu-item" onclick="openSubScreen('Chat Settings', getChatSettingsHTML())">Chat Settings</div>
+      <div class="menu-item" onclick="openSubScreen('Notifications', getNotificationsHTML())">Notifications and Sounds</div>
+      <div class="menu-item" onclick="openSubScreen('Data & Storage', getDataStorageHTML())">Data and Storage</div>
+      <div class="menu-item" onclick="openSubScreen('Language', getLanguageHTML())">Language <span class="menu-value">English</span></div>
+      <div class="menu-item" onclick="openSubScreen('Devices', getDevicesHTML())">Devices & Sessions</div>
+    </div>
+  `;
+}
+
+function openSubScreen(title, contentHtml) {
+  const screen = document.createElement('div');
+  screen.className = 'sub-screen';
+  screen.innerHTML = `
+    <div class="chat-header">
+      <button class="icon-btn" onclick="this.closest('.sub-screen').remove()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      <div class="chat-header-name">${title}</div>
+    </div>
+    <div class="content" style="padding:12px">${contentHtml}</div>
+  `;
+  document.getElementById('app').appendChild(screen);
+}
+
+// Sub-screen HTML Generators
+function getEditProfileHTML() {
+  return `
+    <div class="menu-group">
+      <div class="menu-item">First Name <span class="menu-value">Alex</span></div>
+      <div class="menu-item">Last Name <span class="menu-value">Telegram</span></div>
+      <div class="menu-item">Bio <span class="menu-value">Building Telegram Web...</span></div>
+      <div class="menu-item">Username <span class="menu-value">@alex_telegram</span></div>
+    </div>
+  `;
+}
+function getPrivacyHTML() {
+  return `
+    <div class="menu-group">
+      <div class="menu-item">Blocked Users <span class="menu-value">0</span></div>
+      <div class="menu-item">Phone Number <span class="menu-value">My Contacts</span></div>
+      <div class="menu-item">Last Seen & Online <span class="menu-value">Everybody</span></div>
+      <div class="menu-item">Profile Photos <span class="menu-value">Everybody</span></div>
+      <div class="menu-item">Passcode Lock <span class="menu-value">Disabled</span></div>
+      <div class="menu-item">Two-Step Verification <span class="menu-value">Enabled</span></div>
+    </div>
+  `;
+}
+function getChatSettingsHTML() {
+  return `
+    <div class="menu-group">
+      <div class="menu-item">Message Text Size <span class="menu-value">16 pt</span></div>
+      <div class="menu-item">Auto-Night Mode <span class="menu-value">System</span></div>
+      <div class="menu-item">In-App Browser <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="menu-item">Direct Share <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+  `;
+}
+function getNotificationsHTML() {
+  return `
+    <div class="menu-group">
+      <div class="menu-item">Private Chats <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="menu-item">Groups <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="menu-item">Channels <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="menu-item">Vibrate <span class="menu-value">Default</span></div>
+    </div>
+  `;
+}
+function getDataStorageHTML() {
+  return `
+    <div class="menu-group">
+      <div class="menu-item">Storage Usage <span class="menu-value">1.2 GB</span></div>
+      <div class="menu-item">Network Usage <span class="menu-value">4.5 GB</span></div>
+      <div class="menu-item">Auto-Download Media <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+  `;
+}
+function getLanguageHTML() {
+  return `
+    <div class="menu-group">
+      <div class="menu-item" onclick="alert('Language set to English')">English <span class="menu-value">✓</span></div>
+      <div class="menu-item" onclick="alert('Language set to Spanish')">Spanish</div>
+      <div class="menu-item" onclick="alert('Language set to German')">German</div>
+      <div class="menu-item" onclick="alert('Language set to French')">French</div>
+    </div>
+  `;
+}
+function getDevicesHTML() {
+  return `
+    <div class="menu-group">
+      <div class="menu-group-title">Current Device</div>
+      <div class="menu-item">Telegram Web Client <span class="menu-value">Active</span></div>
+      <div class="menu-group-title">Active Sessions</div>
+      <div class="menu-item">iPhone 15 Pro <span class="menu-value">Online</span></div>
+      <div class="menu-item">macOS Desktop <span class="menu-value">2h ago</span></div>
+    </div>
+  `;
+}
+function getPremiumHTML() {
+  return `
+    <div style="text-align:center;padding:20px;">
+      <h2 style="color:var(--accent)">Telegram Premium</h2>
+      <p style="margin-top:10px;color:var(--text-secondary)">Unlock doubled limits, 4GB upload limits, faster downloads and exclusive features.</p>
+      <button style="margin-top:20px;padding:12px 24px;border-radius:20px;border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer">Subscribe for $4.99/mo</button>
+    </div>
+  `;
+}
+
+// ==================== DIALOG CREATION & OVERLAYS ====================
+function openNewGroupModal() {
+  const name = prompt("Enter new Group Name:");
+  if (name) {
+    const id = String(Date.now());
+    allChats.unshift({
+      id, type: 'group', name, preview: 'Group created',
+      time: 'Now', unread: 0, pinned: false, online: false,
+      gradient: AVATAR_GRADIENTS[0]
+    });
+    renderChats();
+    openChat(id);
+  }
+}
+
+function openNewChannelModal() {
+  const name = prompt("Enter new Channel Name:");
+  if (name) {
+    const id = String(Date.now());
+    allChats.unshift({
+      id, type: 'channel', name, preview: 'Channel created',
+      time: 'Now', unread: 0, pinned: false, online: false,
+      gradient: AVATAR_GRADIENTS[1]
+    });
+    renderChats();
+    openChat(id);
+  }
+}
+
+function startCall(name) {
+  const callView = document.createElement('div');
+  callView.className = 'call-overlay';
+  callView.innerHTML = `
+    <div style="text-align:center">
+      <div class="avatar large" style="background:var(--accent);margin:0 auto">${name.substring(0,2)}</div>
+      <h2 style="margin-top:16px;color:#fff">${name}</h2>
+      <p style="color:var(--accent);margin-top:4px">Calling...</p>
+    </div>
+    <div class="call-controls">
+      <button class="call-btn end" onclick="this.closest('.call-overlay').remove()"><svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
+    </div>
+  `;
+  document.getElementById('app').appendChild(callView);
+}
+
+function openUserInfo(name) {
+  openSubScreen(name, `
+    <div style="text-align:center;padding:20px;">
+      <div class="avatar large" style="background:var(--accent);margin:0 auto">${name.substring(0,2)}</div>
+      <h2 style="margin-top:12px">${name}</h2>
+      <p style="color:var(--text-secondary);margin-top:4px">+1 (555) 019-9988</p>
+    </div>
+    <div class="menu-group">
+      <div class="menu-item">Notifications <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="menu-item" style="color:var(--red)" onclick="alert('User blocked');closeChat();">Block User</div>
+    </div>
+  `);
+}
+
+function toggleNightMode() {
+  isNightMode = !isNightMode;
+  document.body.classList.toggle('light-theme', !isNightMode);
+  document.getElementById('nightToggle').classList.toggle('on', isNightMode);
+}
+
+function openDrawer() {
+  document.getElementById('sideDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('sideDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+
+function toggleSearchFocus() {
+  const inp = document.getElementById('searchInput');
+  inp.focus();
+}
+
+// ==================== INITIALIZATION ====================
+renderFolders();
+renderChats();
+</script>
+</body>
+</html>

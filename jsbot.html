@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Offline Assistant</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:system-ui,sans-serif; background:#0f172a; color:#e2e8f0;
+         display:flex; flex-direction:column; height:100vh; }
+  header { padding:14px; text-align:center; font-weight:600; background:#1e293b; }
+  #chat { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
+  .msg { max-width:82%; padding:10px 14px; border-radius:14px; white-space:pre-wrap; line-height:1.4; }
+  .user { align-self:flex-end; background:#2563eb; }
+  .bot  { align-self:flex-start; background:#334155; }
+  form { display:flex; gap:8px; padding:10px; background:#1e293b; }
+  input { flex:1; padding:12px; border:none; border-radius:10px; font-size:16px; background:#0f172a; color:#fff; }
+  button { padding:12px 18px; border:none; border-radius:10px; background:#2563eb; color:#fff; font-size:16px; }
+</style>
+</head>
+<body>
+<header>🤖 Offline Assistant</header>
+<div id="chat"></div>
+<form id="form">
+  <input id="input" placeholder="Type a message..." autocomplete="off" required />
+  <button>Send</button>
+</form>
+
+<script>
+/* ---------- Storage (safe) ---------- */
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+let userName = store.get("name", "");
+let notes = store.get("notes", []);
+
+/* ---------- Knowledge base: EDIT THIS ---------- */
+const KB = [
+  { keys: ["hello","hi","hey","good morning","good evening"],
+    reply: () => userName ? `Hello ${userName}! How can I help?` : "Hello! How can I help?" },
+  { keys: ["how are you","how r u"],
+    reply: () => "I'm running great, thanks! What can I do for you?" },
+  { keys: ["who are you","your name","what are you"],
+    reply: () => "I'm an offline assistant written in JavaScript. I work without internet." },
+  { keys: ["joke","funny","make me laugh"],
+    reply: () => pick([
+      "Why do programmers prefer dark mode? Because light attracts bugs.",
+      "I would tell you a UDP joke, but you might not get it.",
+      "There are 10 kinds of people: those who know binary and those who don't."]) },
+  { keys: ["html"],
+    reply: () => "HTML builds the structure of a web page: headings, text, images, buttons." },
+  { keys: ["css"],
+    reply: () => "CSS styles the page: colors, sizes, layout, fonts." },
+  { keys: ["javascript","js"],
+    reply: () => "JavaScript makes pages interactive: clicks, data, logic, apps." },
+  { keys: ["python"],
+    reply: () => "Python is a simple, powerful language used for AI, automation, bots and more." },
+  { keys: ["thank","thanks"],
+    reply: () => "You're welcome!" },
+  { keys: ["bye","goodbye","see you"],
+    reply: () => "Goodbye! Come back anytime." },
+  { keys: ["help","what can you do","commands"],
+    reply: () => HELP }
+];
+
+const HELP = `I can:
+• Chat and answer basic questions (edit KB in the code to teach me more)
+• Math: "calc 12*(3+4)" or just "5 + 7"
+• Time/date: "what time is it", "date today"
+• Remember your name: "my name is Sam"
+• Notes: "note buy milk", "show notes", "clear notes"
+• Jokes: "tell me a joke"`;
+
+/* ---------- Helpers ---------- */
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+
+function calc(expr) {
+  expr = expr.replace(/x/gi, "*").replace(/\^/g, "**").replace(/,/g, "");
+  if (!/^[\d+\-*/().%\s*]+$/.test(expr)) return null;   // only safe characters
+  try {
+    const r = Function('"use strict"; return (' + expr + ')')();
+    return Number.isFinite(r) ? r : null;
+  } catch { return null; }
+}
+
+/* ---------- Brain ---------- */
+function respond(raw) {
+  const text = raw.trim();
+  const t = text.toLowerCase();
+
+  // name
+  let m = t.match(/my name is ([a-z\u1200-\u137f' -]+)/i) || t.match(/call me ([a-z\u1200-\u137f' -]+)/i);
+  if (m) {
+    userName = text.slice(text.toLowerCase().indexOf(m[1])).trim();
+    store.set("name", userName);
+    return `Nice to meet you, ${userName}!`;
+  }
+  if (/what('| i)?s my name|who am i/.test(t))
+    return userName ? `Your name is ${userName}.` : "I don't know your name yet. Say: my name is ...";
+
+  // notes
+  if (t.startsWith("note ")) {
+    notes.push(text.slice(5).trim());
+    store.set("notes", notes);
+    return "Saved ✅";
+  }
+  if (/^(show|list|my) notes/.test(t))
+    return notes.length ? notes.map((n, i) => `${i + 1}. ${n}`).join("\n") : "You have no notes.";
+  if (/^(clear|delete) notes/.test(t)) {
+    notes = []; store.set("notes", notes);
+    return "All notes deleted.";
+  }
+
+  // time & date
+  if (/\btime\b/.test(t)) return "It is " + new Date().toLocaleTimeString();
+  if (/\b(date|day|today)\b/.test(t))
+    return "Today is " + new Date().toLocaleDateString(undefined,
+      { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+  // math
+  const mathText = t.replace(/^(calc|calculate|what is|what's)\s*/, "");
+  if (/\d/.test(mathText) && /[+\-*/^x%]/.test(mathText)) {
+    const r = calc(mathText);
+    if (r !== null) return `= ${r}`;
+  }
+
+  // knowledge base (best match = most keyword hits, whole-word)
+  let best = null, bestScore = 0;
+  for (const item of KB) {
+    let score = 0;
+    for (const k of item.keys) {
+      const re = new RegExp("\\b" + k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      if (re.test(t)) score += k.length;
+    }
+    if (score > bestScore) { best = item; bestScore = score; }
+  }
+  if (best) return best.reply();
+
+  return pick([
+    "I don't know that yet. Type \"help\" to see what I can do.",
+    "Hmm, I can't answer that offline. You can teach me by editing the KB in the code.",
+    "Sorry, I didn't understand. Try \"help\"."
+  ]);
+}
+
+/* ---------- UI ---------- */
+const chat = document.getElementById("chat");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+
+function add(text, who) {
+  const d = document.createElement("div");
+  d.className = "msg " + who;
+  d.textContent = text;
+  chat.appendChild(d);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+add(userName ? `Welcome back, ${userName}! Type "help" to see commands.`
+             : 'Hello! I work 100% offline. Type "help" to see commands.', "bot");
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  add(text, "user");
+  setTimeout(() => add(respond(text), "bot"), 300);
+});
+</script>
+</body>
+</html>

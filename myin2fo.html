@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lord Daniel Oje | Personal Profile</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 31, 48, 0.7);
+            --card-border: rgba(56, 189, 248, 0.15);
+            --primary-glow: #00f2fe;
+            --secondary-glow: #4facfe;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --highlight: #38bdf8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Header Section */
+        header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 40px 30px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1100px;
+            margin: 20px auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-glow);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05) rotate(3deg);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
+        }
+
+        .header-content h1 {
+            font-size: 38px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-glow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-content .subtitle {
+            font-size: 18px;
+            color: var(--highlight);
+            font-weight: 600;
+            min-height: 28px;
+        }
+
+        .header-content .welcome-text {
+            color: var(--text-sub);
+            font-size: 15px;
+            margin-top: 4px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(15px);
+            max-width: 650px;
+            margin: 0 auto 30px auto;
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        nav a {
+            color: var(--text-sub);
+            text-decoration: none;
+            margin: 0 14px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        nav a:hover {
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Main Body Content */
+        main {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .glass-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 242, 254, 0.4);
+            box-shadow: 0 12px 35px rgba(0, 242, 254, 0.12);
+        }
+
+        h2 {
+            color: var(--primary-glow);
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 20px;
+            background: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow));
+            border-radius: 4px;
+        }
+
+        p {
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 5px;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        ul li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--primary-glow);
+            font-size: 14px;
+        }
+
+        .highlight {
+            color: var(--primary-glow);
+            font-weight: 600;
+            background: rgba(0, 242, 254, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            margin-top: 40px;
+            background: rgba(11, 15, 25, 0.95);
+            border-top: 1px solid var(--card-border);
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 650px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+            }
+
+            .header-content h1 {
+                font-size: 30px;
+            }
+
+            nav {
+                width: 90%;
+                padding: 10px;
+            }
+
+            nav a {
+                margin: 5px 8px;
+                font-size: 14px;
+            }
+
+            .glass-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="profile-container">
+            <img src="ef048be2229492c501259b5f56b2d901.png" alt="Lord Daniel Oje Profile Picture" class="profile-img">
+        </div>
+        <div class="header-content">
+            <h1>Lord Daniel Oje</h1>
+            <div class="subtitle"><span id="typewriter"></span></div>
+            <p class="welcome-text">Welcome to my personal dynamic portfolio!</p>
+        </div>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#goals">Goals</a>
+        <a href="#philosophy">Philosophy</a>
+    </nav>
+
+    <main>
+
+        <section id="about" class="glass-card">
+            <h2>About Me</h2>
+            <p>
+                My name is <span class="highlight">Lord Daniel Oje</span>.
+                I am from Bitena town, Duguna Fango, Ethiopia.
+                I am a passionate student who enjoys deep analytical thinking and exploring creative tech solutions.
+            </p>
+            <p>
+                My primary interests reside in advanced technology, mathematics, physics, and computer science. I strongly believe that consistent curiosity and discipline unlock endless doors.
+            </p>
+        </section>
+
+        <section id="education" class="glass-card">
+            <h2>My Education</h2>
+            <p>
+                I studied at Bitena Hamus Primary School and Bitena Hamus Secondary School. I currently pursue my studies at <span class="highlight">Wolaita Liqa School</span> in Wolaita Sodo, Ethiopia.
+            </p>
+            <p>
+                <strong>Grade Level:</strong> Grade 11
+            </p>
+            <p>
+                My top theoretical focus areas include advanced mathematics, physics, and modern science disciplines.
+            </p>
+        </section>
+
+        <section id="skills" class="glass-card">
+            <h2>My Interests & Skills</h2>
+            <ul>
+                <li>Learning Python Programming & Algorithms</li>
+                <li>Building Modern Responsive Websites (HTML & CSS)</li>
+                <li>Exploring Interactive JavaScript & Web Functionalities</li>
+                <li>Studying Artificial Intelligence & Machine Learning Frameworks</li>
+                <li>Solving Complex Problems with Mathematics & Physics</li>
+            </ul>
+        </section>
+
+        <section id="goals" class="glass-card">
+            <h2>My Future Goals</h2>
+            <p>
+                My primary dream is to become a top-tier
+                <span class="highlight">Artificial Intelligence & Machine Learning Engineer</span>.
+            </p>
+            <p>
+                I aim to build innovative software solutions, found an impactful enterprise, achieve financial independence, empower my family, and contribute positively to society.
+            </p>
+            <p>
+                I hold a steadfast belief that persistence, knowledge, faith, and continuous daily improvement lead to success.
+            </p>
+        </section>
+
+        <section id="philosophy" class="glass-card">
+            <h2>Personal Philosophy</h2>
+            <p>
+                I believe that every complex problem hides a brilliant discovery. Instead of turning back when facing challenging concepts, I choose to experiment, adapt, and build my way forward.
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Lord Daniel Oje. All rights reserved.</p>
+        <p>Built with Passion, HTML, CSS, and Interactive JS.</p>
+    </footer>
+
+    <!-- JavaScript Animations -->
+    <script>
+        // 1. Typewriter Animation for Header Subtitle
+        const words = ["Student", "Future AI/ML Engineer", "Programmer", "Tech Innovator"];
+        let i = 0;
+        let timer;
+
+        function typingEffect() {
+            let word = words[i].split("");
+            var loopTyping = function() {
+                if (word.length > 0) {
+                    document.getElementById('typewriter').innerHTML += word.shift();
+                } else {
+                    setTimeout(deletingEffect, 2000);
+                    return false;
+                }
+                timer = setTimeout(loopTyping, 100);
+            };
+            loopTyping();
+        }
+
+        function deletingEffect() {
+            let word = words[i].split("");
+            var loopDeleting = function() {
+                if (word.length > 0) {
+                    word.pop();
+                    document.getElementById('typewriter').innerHTML = word.join("");
+                } else {
+                    if (words.length > (i + 1)) {
+                        i++;
+                    } else {
+                        i = 0;
+                    }
+                    setTimeout(typingEffect, 500);
+                    return false;
+                }
+                timer = setTimeout(loopDeleting, 50);
+            };
+            loopDeleting();
+        }
+
+        typingEffect();
+
+        // 2. Scroll-Triggered Reveal Animation (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15
+        });
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // 3. Subtle Interactive Card Tilt on Mouse Move
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `perspective(1000px) rotateX(${-y / 35}deg) rotateY(${x / 35}deg) translateY(-5px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+            });
+        });
+    </script>
+
+</body>
+</html>

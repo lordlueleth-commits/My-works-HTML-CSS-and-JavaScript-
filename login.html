@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Portal - Login / Sign Up</title>
+  <style>
+    :root {
+      --primary: #5eb5f7;
+      --primary-hover: #40a0e0;
+      --bg-dark: #0e1621;
+      --card-bg: #17212b;
+      --input-bg: #242f3d;
+      --text-main: #ffffff;
+      --text-muted: #6d7f8f;
+      --error-color: #e53935;
+      --success-color: #4dcd5e;
+      --border-radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 520px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      position: relative;
+    }
+
+    /* Tab Header Navigation */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--input-bg);
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 0;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary);
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* Forms */
+    .form-container {
+      display: none;
+    }
+
+    .form-container.active {
+      display: block;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    label span.req {
+      color: var(--error-color);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--input-bg);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    select option {
+      background-color: var(--input-bg);
+      color: var(--text-main);
+    }
+
+    /* Buttons */
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.99);
+    }
+
+    /* Alert Banner */
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .alert.error {
+      background-color: rgba(229, 57, 53, 0.15);
+      border: 1px solid var(--error-color);
+      color: #ff8a80;
+    }
+
+    .alert.success {
+      background-color: rgba(77, 205, 94, 0.15);
+      border: 1px solid var(--success-color);
+      color: #b9f6ca;
+    }
+
+    @media (max-width: 480px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .full-width {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header Navigation Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('signup')">Sign Up</button>
+      <button class="tab-btn" onclick="switchTab('login')">Log In</button>
+    </div>
+
+    <!-- Feedback Message Banner -->
+    <div id="alertBox" class="alert"></div>
+
+    <!-- SIGN UP FORM -->
+    <div id="signupForm" class="form-container active">
+      <h2>Create Your Account</h2>
+      <form onsubmit="handleSignUp(event)">
+        <div class="form-grid">
+          
+          <!-- Full Name -->
+          <div class="input-group full-width">
+            <label for="fullName">Full Name <span class="req">*</span></label>
+            <input type="text" id="fullName" placeholder="e.g. John Doe" required />
+          </div>
+
+          <!-- Email -->
+          <div class="input-group full-width">
+            <label for="signupEmail">Email Address <span class="req">*</span></label>
+            <input type="email" id="signupEmail" placeholder="e.g. john@example.com" required />
+          </div>
+
+          <!-- Password -->
+          <div class="input-group full-width">
+            <label for="signupPassword">Password <span class="req">*</span></label>
+            <input type="password" id="signupPassword" placeholder="Minimum 6 characters" required minlength="6" />
+          </div>
+
+          <!-- Grade -->
+          <div class="input-group">
+            <label for="grade">Grade / Class <span class="req">*</span></label>
+            <select id="grade" required>
+              <option value="" disabled selected>Select Grade</option>
+              <option value="Grade 9">Grade 9</option>
+              <option value="Grade 10">Grade 10</option>
+              <option value="Grade 11">Grade 11</option>
+              <option value="Grade 12">Grade 12</option>
+              <option value="Undergraduate">Undergraduate</option>
+            </select>
+          </div>
+
+          <!-- Age (> 15 Validation) -->
+          <div class="input-group">
+            <label for="age">Age (Must be > 15) <span class="req">*</span></label>
+            <input type="number" id="age" min="16" placeholder="e.g. 17" required />
+          </div>
+
+          <!-- Section -->
+          <div class="input-group">
+            <label for="section">Section <span class="req">*</span></label>
+            <input type="text" id="section" placeholder="e.g. Section A" required />
+          </div>
+
+          <!-- Sex -->
+          <div class="input-group">
+            <label for="sex">Sex <span class="req">*</span></label>
+            <select id="sex" required>
+              <option value="" disabled selected>Select Sex</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- Country -->
+          <div class="input-group full-width">
+            <label for="country">Country <span class="req">*</span></label>
+            <input type="text" id="country" placeholder="e.g. Ethiopia" required />
+          </div>
+
+          <!-- Region -->
+          <div class="input-group">
+            <label for="region">Region / State <span class="req">*</span></label>
+            <input type="text" id="region" placeholder="e.g. SNNPR / Sidama" required />
+          </div>
+
+          <!-- City -->
+          <div class="input-group">
+            <label for="city">City <span class="req">*</span></label>
+            <input type="text" id="city" placeholder="e.g. Wolaita Sodo" required />
+          </div>
+
+        </div>
+
+        <button type="submit" class="submit-btn">Create Account</button>
+      </form>
+    </div>
+
+    <!-- LOG IN FORM -->
+    <div id="loginForm" class="form-container">
+      <h2>Welcome Back</h2>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-grid">
+          
+          <div class="input-group full-width">
+            <label for="loginEmail">Email Address <span class="req">*</span></label>
+            <input type="email" id="loginEmail" placeholder="Enter your email" required />
+          </div>
+
+          <div class="input-group full-width">
+            <label for="loginPassword">Password <span class="req">*</span></label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required />
+          </div>
+
+        </div>
+
+        <a style=" display: inline-block;
+    text-decoration: none;
+    padding: 10px 10px 10px;
+    border: 5px solid black;
+    background-color: #c157e3;
+    border-radius: 10px" href="Telegram.html">Log In</a>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab Switcher
+    function switchTab(tabName) {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.style.display = 'none';
+
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
+
+      if (tabName === 'signup') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('signupForm').classList.add('active');
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+      }
+    }
+
+    // Show Alert Box
+    function showAlert(message, type) {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.textContent = message;
+      alertBox.className = `alert ${type}`;
+      alertBox.style.display = 'block';
+    }
+
+    // Handle Sign Up Form Submission
+    function handleSignUp(event) {
+      event.preventDefault();
+
+      const ageInput = parseInt(document.getElementById('age').value, 10);
+
+      // Validate Age strictly (> 15)
+      if (isNaN(ageInput) || ageInput <= 15) {
+        showAlert('Registration failed: Age must be greater than 15.', 'error');
+        return;
+      }
+
+      // Read form data
+      const userData = {
+        fullName: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('signupEmail').value.trim(),
+        grade: document.getElementById('grade').value,
+        age: ageInput,
+        section: document.getElementById('section').value.trim(),
+        sex: document.getElementById('sex').value,
+        country: document.getElementById('country').value.trim(),
+        region: document.getElementById('region').value.trim(),
+        city: document.getElementById('city').value.trim()
+      };
+
+      showAlert(`Account successfully created for ${userData.fullName}! You can now log in.`, 'success');
+      console.log('Registered User:', userData);
+    }
+
+    // Handle Login Form Submission
+    function handleLogin(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('loginEmail').value.trim();
+      showAlert(`Welcome back, ${email}! Logging in...`, 'success');
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Multiverse - Solar System & Beyond</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: black;
+            color: white;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 24px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+            z-index: 10;
+            font-size: 14px;
+        }
+        #controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            background: rgba(20, 20, 30, 0.85);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            z-index: 20;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ccc;
+            font-size: 14px;
+        }
+        input[type="range"] {
+            width: 180px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ffaa00;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ffaa00;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        #planet-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 10, 20, 0.85);
+            padding: 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 280px;
+            pointer-events: none;
+            z-index: 15;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+            transition: opacity 0.3s ease;
+        }
+        #planet-info h2 {
+            margin: 0 0 8px 0;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #ffaa00;
+            text-transform: uppercase;
+            font-size: 18px;
+        }
+        #planet-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+        #planet-info .highlight {
+            color: #fff;
+            font-weight: 500;
+        }
+        .label {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            pointer-events: none;
+            z-index: 5;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            background: rgba(0,0,0,0.4);
+            padding: 2px 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #speed-value {
+            min-width: 60px;
+            text-align: center;
+            color: #ffaa00;
+            font-weight: 600;
+        }
+        .pause-active {
+            background: rgba(255, 170, 0, 0.3) !important;
+            border-color: #ffaa00 !important;
+            color: #ffaa00 !important;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.3);
+        }
+        .universe-badge {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #88aaff;
+            border: 1px solid #88aaff44;
+            pointer-events: none;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+        .universe-badge span {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">🌌 3D Multiverse • Click a planet or universe to focus</div>
+    <div class="universe-badge">Current Universe: <span id="current-universe-label">Prime</span></div>
+    <div id="planet-info">
+        <h2 id="info-title">☀️ Sun</h2>
+        <p><span class="highlight">Type:</span> <span id="info-type">Star</span></p>
+        <p><span class="highlight">Radius:</span> <span id="info-radius">696,340 km</span></p>
+        <p><span class="highlight">Period:</span> <span id="info-period">—</span></p>
+        <p><span class="highlight">Moons:</span> <span id="info-moons">0</span></p>
+        <p><span class="highlight">Info:</span> <span id="info-desc">The star at the center of the Solar System.</span></p>
+    </div>
+
+    <div id="controls">
+        <button id="pauseBtn">⏸️ Pause</button>
+        <div class="slider-container">
+            <span>⚡ Speed</span>
+            <input type="range" id="speedSlider" min="0" max="3" step="0.01" value="1.0">
+            <span id="speed-value">1.00x</span>
+        </div>
+        <button id="resetCameraBtn">🎥 Reset View</button>
+        <button id="toggleMultiverseBtn">🌌 Toggle Multiverse</button>
+    </div>
+
+    <!-- Import Three.js and OrbitControls from CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.126.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.126.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- Initialize Scene, Camera, Renderer ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050510);
+        
+        // Add distant stars for depth
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsCount = 8000;
+        const starsPositions = new Float32Array(starsCount * 3);
+        for (let i = 0; i < starsCount * 3; i += 3) {
+            starsPositions[i] = (Math.random() - 0.5) * 6000;
+            starsPositions[i+1] = (Math.random() - 0.5) * 6000;
+            starsPositions[i+2] = (Math.random() - 0.5) * 6000;
+        }
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
+        const starsMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7, transparent: true, opacity: 0.8 });
+        const stars = new THREE.Points(starsGeometry, starsMaterial);
+        scene.add(stars);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.set(0, 40, 100);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        // --- Controls ---
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = false;
+        controls.enableZoom = true;
+        controls.zoomSpeed = 1.2;
+        controls.rotateSpeed = 0.8;
+        controls.target.set(0, 0, 0);
+        controls.maxDistance = 500;
+        controls.minDistance = 3;
+
+        // --- Lighting ---
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+
+        const sunLight = new THREE.PointLight(0xffeedd, 2.5, 0, 0);
+        sunLight.position.set(0, 0, 0);
+        scene.add(sunLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        dirLight.position.set(10, 20, 5);
+        scene.add(dirLight);
+
+        // Helper to create a glow texture
+        function createGlowTexture(color) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(0.6, color + 'aa');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 64, 64);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // --- Data for planets in our solar system ---
+        const planetsData = [
+            { name: 'Mercury', radius: 0.8, distance: 10, color: 0xaaaaaa, speed: 0.02, type: 'Terrestrial', realRadius: '2,439.7 km', period: '88 days', moons: 0, desc: 'Smallest planet, closest to the Sun.' },
+            { name: 'Venus', radius: 1.0, distance: 14, color: 0xffcc88, speed: 0.015, type: 'Terrestrial', realRadius: '6,051.8 km', period: '225 days', moons: 0, desc: 'Hottest planet, thick atmosphere.' },
+            { name: 'Earth', radius: 1.05, distance: 18, color: 0x2288ff, speed: 0.012, type: 'Terrestrial', realRadius: '6,371 km', period: '365.25 days', moons: 1, desc: 'Our home, the only known life-bearing world.' },
+            { name: 'Mars', radius: 0.9, distance: 22, color: 0xff6633, speed: 0.01, type: 'Terrestrial', realRadius: '3,389.5 km', period: '687 days', moons: 2, desc: 'The Red Planet, rusty and dusty.' },
+            { name: 'Jupiter', radius: 2.2, distance: 30, color: 0xddbb99, speed: 0.007, type: 'Gas Giant', realRadius: '69,911 km', period: '11.86 years', moons: 95, desc: 'Largest planet, Great Red Spot.' },
+            { name: 'Saturn', radius: 1.9, distance: 38, color: 0xeeddbb, speed: 0.005, type: 'Gas Giant', realRadius: '58,232 km', period: '29.46 years', moons: 146, desc: 'Famous for its ring system.' },
+            { name: 'Uranus', radius: 1.5, distance: 46, color: 0x88ccff, speed: 0.004, type: 'Ice Giant', realRadius: '25,362 km', period: '84 years', moons: 28, desc: 'Rotates on its side, cold blue.' },
+            { name: 'Neptune', radius: 1.5, distance: 54, color: 0x3366cc, speed: 0.003, type: 'Ice Giant', realRadius: '24,622 km', period: '165 years', moons: 16, desc: 'Farthest planet, windy and blue.' }
+        ];
+
+        // --- Multiverse Containers ---
+        // Each universe is a THREE.Group that can be toggled visible/invisible and repositioned.
+        // Universe Prime: our solar system at origin.
+        // Universe Alpha: a copy with different colors, positioned far away.
+        // Universe Beta: another copy, different scale/rotation, positioned elsewhere.
+        
+        const universes = []; // { group, label, data, offset, planets: [] }
+        
+        // Global arrays for the currently active (Prime) universe's planets for animation
+        // Actually we'll manage animation per universe.
+        
+        // We'll create 3 universes. Each contains its own sun, planets, orbits, trails, labels.
+        
+        // Helper to create a universe
+        function createUniverse(id, name, offset, colorShift = 0, scaleFactor = 1.0, rotationOffset = 0) {
+            const group = new THREE.Group();
+            group.position.copy(offset);
+            
+            // Adjust group rotation for variety
+            group.rotation.y = rotationOffset;
+            
+            // Store universe data
+            const universeData = {
+                id: id,
+                name: name,
+                group: group,
+                offset: offset.clone(),
+                colorShift: colorShift,
+                scaleFactor: scaleFactor,
+                planets: [],
+                trails: [],
+                labels: [], // divs
+                sun: null,
+                sunLabel: null,
+                sunData: { name: 'Sun', type: 'Star', realRadius: '696,340 km', period: '—', moons: 0, desc: 'The star at the center of this universe.' }
+            };
+            
+            // --- Create Sun ---
+            const sunGeometry = new THREE.SphereGeometry(3.5 * scaleFactor, 32, 32);
+            // Shift color based on universe
+            const sunColor = new THREE.Color(0xffaa00).offsetHSL(colorShift, 0, 0);
+            const sunMaterial = new THREE.MeshStandardMaterial({
+                color: sunColor,
+                emissive: sunColor.clone().multiplyScalar(0.7),
+                roughness: 0.5,
+                metalness: 0.1
+            });
+            const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+            group.add(sun);
+            universeData.sun = sun;
+            
+            // Sun glow
+            const sunGlowTexture = createGlowTexture('#' + sunColor.getHexString());
+            const sunGlowMaterial = new THREE.SpriteMaterial({ map: sunGlowTexture, color: sunColor, blending: THREE.AdditiveBlending, depthWrite: false });
+            const sunGlow = new THREE.Sprite(sunGlowMaterial);
+            sunGlow.scale.set(12 * scaleFactor, 12 * scaleFactor, 1);
+            group.add(sunGlow);
+            
+            // Light for this universe (point light at sun position within group)
+            const uLight = new THREE.PointLight(sunColor, 2.0, 0, 0);
+            uLight.position.set(0, 0, 0);
+            group.add(uLight);
+            
+            // --- Create Planets ---
+            planetsData.forEach(pData => {
+                // Scale distances and radii
+                const dist = pData.distance * scaleFactor;
+                const rad = pData.radius * scaleFactor;
+                
+                // Shift color
+                const baseColor = new THREE.Color(pData.color);
+                const shiftedColor = baseColor.clone().offsetHSL(colorShift, 0, 0);
+                
+                const geometry = new THREE.SphereGeometry(rad, 24, 24);
+                const material = new THREE.MeshStandardMaterial({
+                    color: shiftedColor,
+                    emissive: shiftedColor.clone().multiplyScalar(0.1),
+                    roughness: 0.4,
+                    metalness: 0.1
+                });
+                const planet = new THREE.Mesh(geometry, material);
+                
+                // Store userData
+                planet.userData = {
+                    distance: dist,
+                    speed: pData.speed,
+                    angle: Math.random() * Math.PI * 2,
+                    name: pData.name,
+                    type: pData.type,
+                    realRadius: pData.realRadius,
+                    period: pData.period,
+                    moons: pData.moons,
+                    desc: pData.desc,
+                    color: shiftedColor,
+                    universeId: id
+                };
+                
+                // Position
+                planet.position.x = dist * Math.cos(planet.userData.angle);
+                planet.position.z = dist * Math.sin(planet.userData.angle);
+                group.add(planet);
+                universeData.planets.push(planet);
+                
+                // Orbit line
+                const orbitPoints = [];
+                const segments = 96;
+                for (let i = 0; i <= segments; i++) {
+                    const angle = (i / segments) * Math.PI * 2;
+                    const x = dist * Math.cos(angle);
+                    const z = dist * Math.sin(angle);
+                    orbitPoints.push(new THREE.Vector3(x, 0, z));
+                }
+                const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+                const orbitMaterial = new THREE.LineBasicMaterial({ 
+                    color: shiftedColor, 
+                    transparent: true, 
+                    opacity: 0.2 
+                });
+                const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+                group.add(orbitLine);
+                
+                // Glow sprite attached to planet
+                const glowTexture = createGlowTexture('#' + shiftedColor.getHexString());
+                const glowMaterial = new THREE.SpriteMaterial({ map: glowTexture, color: shiftedColor, blending: THREE.AdditiveBlending, depthWrite: false });
+                const glowSprite = new THREE.Sprite(glowMaterial);
+                glowSprite.scale.set(rad * 3.0, rad * 3.0, 1);
+                planet.add(glowSprite);
+                
+                // --- Trail (Line with dynamic points) ---
+                const trailLength = 25;
+                const trailPositions = new Float32Array(trailLength * 3);
+                for (let i = 0; i < trailLength; i++) {
+                    trailPositions[i*3] = planet.position.x;
+                    trailPositions[i*3+1] = planet.position.y;
+                    trailPositions[i*3+2] = planet.position.z;
+                }
+                const trailGeo = new THREE.BufferGeometry();
+                trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+                const trailMat = new THREE.LineBasicMaterial({ 
+                    color: shiftedColor, 
+                    transparent: true, 
+                    opacity: 0.4 
+                });
+                const trailLine = new THREE.Line(trailGeo, trailMat);
+                group.add(trailLine);
+                
+                universeData.trails.push({
+                    line: trailLine,
+                    positions: trailPositions,
+                    planet: planet,
+                    length: trailLength
+                });
+            });
+            
+            // Add group to scene
+            scene.add(group);
+            
+            universes.push(universeData);
+            return universeData;
+        }
+
+        // --- Create Multiple Universes ---
+        // Universe 0: Prime (our standard) at origin
+        const primeUniverse = createUniverse(0, 'Prime', new THREE.Vector3(0, 0, 0), 0.0, 1.0, 0);
+        
+        // Universe 1: Alpha - shifted in hue (blueish), slightly larger, positioned to the right and up
+        const alphaUniverse = createUniverse(1, 'Alpha', new THREE.Vector3(180, 40, -120), 0.4, 1.1, 0.5);
+        
+        // Universe 2: Beta - shifted towards red, smaller, positioned to the left and down
+        const betaUniverse = createUniverse(2, 'Beta', new THREE.Vector3(-200, -30, 150), -0.3, 0.9, -0.8);
+        
+        // Universe 3: Gamma - purple tint, far above
+        const gammaUniverse = createUniverse(3, 'Gamma', new THREE.Vector3(50, 200, 80), 0.7, 1.0, 1.2);
+        
+        // Initially, show all universes? Let's show all for the multiverse effect.
+        // But we may want to allow toggling. We'll start with all visible.
+        
+        // --- Labels for planets using HTML divs (must handle multiple universes) ---
+        const labelContainer = document.createElement('div');
+        labelContainer.style.position = 'absolute';
+        labelContainer.style.top = '0';
+        labelContainer.style.left = '0';
+        labelContainer.style.width = '100%';
+        labelContainer.style.height = '100%';
+        labelContainer.style.pointerEvents = 'none';
+        labelContainer.style.zIndex = '5';
+        document.body.appendChild(labelContainer);
+        
+        // We'll create labels for each planet in each universe
+        // Also label each universe's sun and a universe name label
+        universes.forEach(universe => {
+            // Label for universe name floating in space? We'll create a div for each universe's center.
+            const univDiv = document.createElement('div');
+            univDiv.className = 'label';
+            univDiv.textContent = `🌌 ${universe.name}`;
+            univDiv.style.color = '#aaccff';
+            univDiv.style.fontSize = '14px';
+            univDiv.style.fontWeight = 'bold';
+            labelContainer.appendChild(univDiv);
+            universe.universeLabelDiv = univDiv;
+            
+            // Sun label
+            const sunDiv = document.createElement('div');
+            sunDiv.className = 'label';
+            sunDiv.textContent = 'Sun';
+            sunDiv.style.color = '#ffaa00';
+            labelContainer.appendChild(sunDiv);
+            universe.sunLabel = sunDiv;
+            
+            // Planet labels
+            universe.planets.forEach(planet => {
+                const div = document.createElement('div');
+                div.className = 'label';
+                div.textContent = planet.userData.name;
+                // Color label based on planet color? Slight tint
+                const col = planet.userData.color;
+                div.style.color = `rgb(${col.r*255},${col.g*255},${col.b*255})`;
+                div.style.textShadow = '0 0 8px black';
+                labelContainer.appendChild(div);
+                universe.labels.push({ div, planet });
+            });
+        });
+
+        // --- State Variables ---
+        let speedMultiplier = 1.0;
+        let isPaused = false;
+        let focusedPlanet = null; // planet object or sun mesh or universe group
+        let currentUniverseId = 0; // for info display
+        
+        // --- UI Elements ---
+        const pauseBtn = document.getElementById('pauseBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speed-value');
+        const resetCameraBtn = document.getElementById('resetCameraBtn');
+        const toggleMultiverseBtn = document.getElementById('toggleMultiverseBtn');
+        const infoTitle = document.getElementById('info-title');
+        const infoType = document.getElementById('info-type');
+        const infoRadius = document.getElementById('info-radius');
+        const infoPeriod = document.getElementById('info-period');
+        const infoMoons = document.getElementById('info-moons');
+        const infoDesc = document.getElementById('info-desc');
+        const currentUniverseLabel = document.getElementById('current-universe-label');
+
+        // Sun data for info panel
+        const sunData = { name: 'Sun', type: 'Star', realRadius: '696,340 km', period: '—', moons: 0, desc: 'The star at the center of the Solar System.' };
+
+        // --- Pause Button ---
+        pauseBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+            pauseBtn.textContent = isPaused ? '▶️ Play' : '⏸️ Pause';
+            pauseBtn.classList.toggle('pause-active', isPaused);
+        });
+
+        // --- Speed Slider ---
+        speedSlider.addEventListener('input', (e) => {
+            speedMultiplier = parseFloat(e.target.value);
+            speedValue.textContent = speedMultiplier.toFixed(2) + 'x';
+        });
+
+        // --- Reset Camera ---
+        resetCameraBtn.addEventListener('click', () => {
+            focusedPlanet = null;
+            controls.target.set(0, 0, 0);
+            camera.position.set(0, 40, 100);
+            updateInfoPanel(sunData);
+            currentUniverseId = 0;
+            currentUniverseLabel.textContent = 'Prime';
+        });
+
+        // --- Toggle Multiverse (show/hide other universes) ---
+        let multiverseVisible = true;
+        toggleMultiverseBtn.addEventListener('click', () => {
+            multiverseVisible = !multiverseVisible;
+            universes.forEach((univ, idx) => {
+                if (idx === 0) return; // always show Prime
+                univ.group.visible = multiverseVisible;
+                // Also hide labels? We'll handle in the animation loop by checking group visibility.
+            });
+            toggleMultiverseBtn.textContent = multiverseVisible ? '🌌 Hide Multiverse' : '🌌 Show Multiverse';
+        });
+
+        // --- Update Info Panel Function ---
+        function updateInfoPanel(data, universeName = 'Prime') {
+            infoTitle.textContent = `☀️ ${data.name}`;
+            infoType.textContent = data.type;
+            infoRadius.textContent = data.realRadius || '—';
+            infoPeriod.textContent = data.period || '—';
+            infoMoons.textContent = data.moons !== undefined ? data.moons : '—';
+            infoDesc.textContent = data.desc || '';
+            currentUniverseLabel.textContent = universeName;
+        }
+
+        // Set initial info for Sun
+        updateInfoPanel(sunData, 'Prime');
+
+        // --- Raycaster for click-to-focus ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        renderer.domElement.addEventListener('click', (event) => {
+            mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+            mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            // Collect all clickable objects: all planets and suns from visible universes
+            const clickable = [];
+            universes.forEach(univ => {
+                if (univ.group.visible) {
+                    clickable.push(univ.sun);
+                    univ.planets.forEach(p => clickable.push(p));
+                }
+            });
+
+            const intersects = raycaster.intersectObjects(clickable);
+
+            if (intersects.length > 0) {
+                const hit = intersects[0].object;
+                
+                // Determine which universe it belongs to
+                let universe = null;
+                let isSun = false;
+                for (let u of universes) {
+                    if (u.sun === hit) {
+                        universe = u;
+                        isSun = true;
+                        break;
+                    }
+                    if (u.planets.includes(hit)) {
+                        universe = u;
+                        break;
+                    }
+                }
+                
+                if (universe) {
+                    currentUniverseId = universe.id;
+                    currentUniverseLabel.textContent = universe.name;
+                    
+                    if (isSun) {
+                        // Focus on Sun of that universe
+                        focusedPlanet = universe.sun; // we'll handle sun focus specially
+                        controls.target.copy(universe.group.position);
+                        // Position camera relative to universe center
+                        camera.position.copy(universe.group.position).add(new THREE.Vector3(0, 15, 30));
+                        // Update info with sun data
+                        updateInfoPanel(universe.sunData, universe.name);
+                    } else {
+                        // Focus on planet
+                        focusedPlanet = hit;
+                        // Update info panel
+                        const ud = hit.userData;
+                        const data = {
+                            name: ud.name,
+                            type: ud.type,
+                            realRadius: ud.realRadius,
+                            period: ud.period,
+                            moons: ud.moons,
+                            desc: ud.desc
+                        };
+                        updateInfoPanel(data, universe.name);
+                        
+                        // Set controls target to planet's world position (since planet is inside group)
+                        const worldPos = new THREE.Vector3();
+                        hit.getWorldPosition(worldPos);
+                        controls.target.copy(worldPos);
+                        
+                        // Position camera relative to planet
+                        const rad = hit.geometry.parameters.radius;
+                        const offset = new THREE.Vector3(rad * 5, rad * 2, rad * 8);
+                        camera.position.copy(worldPos).add(offset);
+                    }
+                }
+            } else {
+                // Clicked empty space: deselect focus
+                focusedPlanet = null;
+                // Do not reset target automatically, keep as is for manual control.
+            }
+        });
+
+        // --- Animation Loop ---
+        let clock = new THREE.Clock();
+
+        function animate() {
+            const delta = clock.getDelta();
+            
+            // Update planet positions and trails for all universes
+            universes.forEach(universe => {
+                if (!universe.group.visible) return;
+                
+                // Update planets
+                universe.planets.forEach(planet => {
+                    if (!isPaused) {
+                        planet.userData.angle += planet.userData.speed * delta * speedMultiplier * 2.0;
+                        const dist = planet.userData.distance;
+                        const angle = planet.userData.angle;
+                        planet.position.x = Math.cos(angle) * dist;
+                        planet.position.z = Math.sin(angle) * dist;
+                    }
+                });
+                
+                // Update trails
+                universe.trails.forEach(trail => {
+                    const planet = trail.planet;
+                    const positions = trail.positions;
+                    const len = trail.length;
+                    
+                    // Shift positions
+                    for (let i = len - 1; i > 0; i--) {
+                        positions[i*3] = positions[(i-1)*3];
+                        positions[i*3+1] = positions[(i-1)*3+1];
+                        positions[i*3+2] = positions[(i-1)*3+2];
+                    }
+                    positions[0] = planet.position.x;
+                    positions[1] = planet.position.y;
+                    positions[2] = planet.position.z;
+                    
+                    trail.line.geometry.attributes.position.needsUpdate = true;
+                });
+            });
+
+            // Update camera target if focused on a planet/sun (smooth follow)
+            if (focusedPlanet) {
+                if (focusedPlanet.isMesh && focusedPlanet.geometry && focusedPlanet.geometry.type === 'SphereGeometry' && focusedPlanet.parent && focusedPlanet.parent.type === 'Group') {
+                    // It's a planet or sun
+                    const worldPos = new THREE.Vector3();
+                    focusedPlanet.getWorldPosition(worldPos);
+                    controls.target.lerp(worldPos, 0.1);
+                }
+            }
+
+            // Update controls
+            controls.update();
+
+            // Update all HTML labels
+            universes.forEach(universe => {
+                const isVisible = universe.group.visible;
+                
+                // Universe name label (position at group center)
+                if (universe.universeLabelDiv) {
+                    if (!isVisible) {
+                        universe.universeLabelDiv.style.display = 'none';
+                    } else {
+                        const vec = universe.group.position.clone().project(camera);
+                        if (vec.z > 1) {
+                            universe.universeLabelDiv.style.display = 'none';
+                        } else {
+                            universe.universeLabelDiv.style.display = 'block';
+                            const x = (vec.x * 0.5 + 0.5) * window.innerWidth;
+                            const y = (-vec.y * 0.5 + 0.5) * window.innerHeight;
+                            universe.universeLabelDiv.style.left = x + 'px';
+                            universe.universeLabelDiv.style.top = y + 'px';
+                        }
+                    }
+                }
+                
+                // Sun label
+                if (universe.sunLabel) {
+                    if (!isVisible) {
+                        universe.sunLabel.style.display = 'none';
+                    } else {
+                        const sunPos = new THREE.Vector3(0, 0, 0).applyMatrix4(universe.group.matrixWorld);
+                        const vec = sunPos.project(camera);
+                        if (vec.z > 1) {
+                            universe.sunLabel.style.display = 'none';
+                        } else {
+                            universe.sunLabel.style.display = 'block';
+                            const x = (vec.x * 0.5 + 0.5) * window.innerWidth;
+                            const y = (-vec.y * 0.5 + 0.5) * window.innerHeight;
+                            universe.sunLabel.style.left = x + 'px';
+                            universe.sunLabel.style.top = y + 'px';
+                        }
+                    }
+                }
+                
+                // Planet labels
+                universe.labels.forEach(item => {
+                    if (!isVisible) {
+                        item.div.style.display = 'none';
+                    } else {
+                        const worldPos = new THREE.Vector3();
+                        item.planet.getWorldPosition(worldPos);
+                        const vec = worldPos.project(camera);
+                        if (vec.z > 1) {
+                            item.div.style.display = 'none';
+                        } else {
+                            item.div.style.display = 'block';
+                            const x = (vec.x * 0.5 + 0.5) * window.innerWidth;
+                            const y = (-vec.y * 0.5 + 0.5) * window.innerHeight;
+                            item.div.style.left = x + 'px';
+                            item.div.style.top = y + 'px';
+                        }
+                    }
+                });
+            });
+
+            // Rotate stars slowly
+            stars.rotation.y += 0.00005;
+
+            // Render
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // --- Handle window resize ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- Initial camera positioning and setup ---
+        // Show all universes initially; set toggle button state
+        toggleMultiverseBtn.textContent = '🌌 Hide Multiverse';
+        
+        // Add a subtle grid or something? Not necessary.
+        
+        // Add a faint axis helper for the multiverse? No, keep it clean.
+        
+        // Add a few distant nebulae-like sprites for aesthetics? Optional, but we can skip to keep performance.
+        
+        // For extra flair, add a small rotation to each universe group slowly? Could be nice but may disorient.
+        // We'll keep them static in orientation but planets orbit.
+        
+        // Add a slow rotation to the entire scene? Not necessary.
+        
+        console.log('3D Multiverse ready. Universes:', universes.map(u => u.name).join(', '));
+    </script>
+</body>
+</html>

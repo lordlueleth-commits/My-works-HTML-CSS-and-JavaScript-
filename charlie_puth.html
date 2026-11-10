@@ -1,0 +1,2552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎤 Shazam – Charlie Puth lyrics (copy‑friendly)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #0b0d10;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 2rem 1rem;
+      color: #eef2f5;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+    h1 span {
+      background: #1e90ff;
+      font-size: 1.2rem;
+      padding: 6px 16px;
+      border-radius: 60px;
+      color: #fff;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    .subhead {
+      color: #8b9eb0;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      border-left: 4px solid #1e90ff;
+      padding-left: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-copy-all {
+      background: #1e90ff;
+      border: none;
+      color: white;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 10px 24px;
+      border-radius: 40px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      box-shadow: 0 8px 18px -6px rgba(30, 144, 255, 0.4);
+    }
+    .btn-copy-all:hover {
+      background: #3aa0ff;
+      transform: scale(1.02);
+    }
+    .btn-copy-all:active {
+      transform: scale(0.98);
+    }
+
+    /* song grid */
+    .songs-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .song-card {
+      background: #14181e;
+      border-radius: 28px;
+      padding: 1.5rem 1.8rem;
+      border: 1px solid #2a313c;
+      box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.6);
+      transition: 0.1s border-color;
+    }
+    .song-card:hover {
+      border-color: #3a4658;
+    }
+
+    .song-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #262e39;
+    }
+
+    .song-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .song-title .artist {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #7e92aa;
+      margin-left: 6px;
+    }
+
+    .copy-single {
+      background: #202730;
+      border: 1px solid #2f3a48;
+      color: #b6c8db;
+      font-size: 0.8rem;
+      padding: 8px 16px;
+      border-radius: 40px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .copy-single:hover {
+      background: #2c3643;
+      color: white;
+      border-color: #4a5c72;
+    }
+
+    .lyrics-box {
+      background: #0e1218;
+      border-radius: 20px;
+      padding: 1.5rem 1.8rem;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: #d2dee9;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #1d2530;
+      scrollbar-width: thin;
+      scrollbar-color: #2e3b4a #0e1218;
+    }
+    .lyrics-box::-webkit-scrollbar {
+      width: 6px;
+    }
+    .lyrics-box::-webkit-scrollbar-track {
+      background: #0e1218;
+    }
+    .lyrics-box::-webkit-scrollbar-thumb {
+      background: #2e3b4a;
+      border-radius: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #1e90ff20;
+      color: #8bc3ff;
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: 40px;
+      letter-spacing: 0.3px;
+      margin-left: 6px;
+      border: 1px solid #1e90ff40;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e90ff;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      opacity: 0;
+      transition: 0.25s ease;
+      box-shadow: 0 12px 30px -8px #00000080;
+      pointer-events: none;
+      z-index: 999;
+      backdrop-filter: blur(6px);
+      border: 1px solid #ffffff30;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .footer-note {
+      margin-top: 3rem;
+      text-align: center;
+      color: #3f4d5e;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 1.2rem 0.8rem; }
+      h1 { font-size: 1.6rem; }
+      .song-card { padding: 1rem 1rem; }
+      .lyrics-box { padding: 1rem; font-size: 0.85rem; }
+      .song-title { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>
+    🎤 Shazam
+    <span>Charlie Puth</span>
+  </h1>
+  <div class="subhead">
+    <span>📋 all lyrics — clean, copy‑friendly, scroll inside each card</span>
+    <button class="btn-copy-all" id="copyAllBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+      Copy all lyrics
+    </button>
+  </div>
+
+  <div class="songs-grid" id="songsGrid">
+    <!-- injected via JavaScript -->
+  </div>
+  <div class="footer-note">
+    ⚡ click any “copy” button — entire lyrics go to clipboard
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ Copied to clipboard!</div>
+
+<script>
+  // ------------------------------------------------------------
+  //   all lyrics data (as provided) – kept in order
+  // ------------------------------------------------------------
+  const songsData = [
+    {
+      title: "How Long",
+      artist: "Charlie Puth",
+      lyrics: `Alright
+Ooh-oh, yeah
+
+I'll admit, I was wrong, what else can I say, girl?
+Can't you blame my head and not my heart
+I was drunk, I was gone, that don't make it right, but
+Promise there were no feelings involved, mmh
+
+She said, boy, tell me honestly
+Was it real or just for show? (Yeah)
+She said, save your apologies
+Baby, I just gotta know
+
+How long has this been goin' on?
+You've been creepin' 'round on me
+While you're callin' me, "baby"
+How long has this been goin' on?
+You've been actin' so shady (shady)
+I've been feelin' it lately, baby
+
+Ooh-ooh-ooh (yeah)
+Ooh-ooh-hoo (encore)
+Ooh-ooh-ooh-hoo-ooh-ooh
+
+I'll admit (I'll admit), it's my fault (my fault), but you gotta believe me
+When I say it only happened once, mmh
+I try, and I try, but you'll never see that
+You're the only one I wanna love, oh-yeah
+
+She said, boy, tell me honestly
+Was it real or just for show? (Yeah)
+She said, save your apologies
+Baby, I just gotta know
+
+How long has this been goin' on? huh
+You've been creepin' 'round on me (on me)
+While you're callin' me, "baby"
+How long has this been goin' on?
+You've been actin' so shady (shady)
+I've been feelin' it lately (lately), baby
+
+Ooh-ooh-ooh (yeah)
+Ooh-ooh-hoo (encore)
+Ooh-ooh-ooh-hoo-ooh-ooh
+How long has this been goin' on baby?
+Ooh-ooh-ooh (woo)
+Ooh-ooh-ooh, you gotta go tell me now
+Ooh-ooh-ooh-hoo-ooh-ooh
+
+She said, "Boy, tell me honestly
+Was it real or just for show?" Yeah
+She said, "Save your apologies
+Baby, I just gotta know"
+
+How long has this been goin' on? (On)
+You've been creepin' 'round on me
+While you're callin' me, "baby"
+How long has this been goin' on?
+You've been actin' so shady (shady)
+I've been feelin' it lately
+
+Ooh-ooh-ooh, yeah (how long has this been goin' on?)
+Ooh-ooh-hoo, encore (you've been creepin' 'round on me)
+Ooh-ooh-ooh-hoo-ooh-ooh
+How long has it been goin' on baby
+Ooh-ooh-ooh (how long has this been goin' on)
+Ooh-ooh-ooh-ooh, encore (you gotta go tell me now)
+Ooh-ooh-ooh-hoo-ooh-ooh (you've been actin' so shady)
+(I've been feelin' it lately)
+Baby
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Done for Me (feat. Kehlani)",
+      artist: "Charlie Puth",
+      lyrics: `Oh, oh
+
+What you thinking?
+You think that you could be better off with somebody new
+(No oh, oh baby, no)
+You say you're leaving
+Well, if you wanna leave there ain't nobody stopping you
+(No oh, oh baby, no)
+
+I won't beg for your love
+Won't say please
+I won't fall to the ground on my knees
+You know I've given this everything
+Baby, honestly, baby, honestly
+
+I lie for you, baby
+I die for you, baby
+Cry for you, baby
+But tell me what you've done for me
+For you, baby
+And only you, baby
+The things I do, baby
+But tell me what you've done for me
+
+I never cheated
+Deleted everyone 'cause they made you uncomfortable
+(No oh, oh baby, no)
+These accusations
+I can't apologize for something that I didn't do
+(No oh, oh baby, no)
+
+I won't beg for your love
+Won't say please (oh no, won't say please)
+I won't fall to the ground on my knees (on my knees)
+You know I've given this everything
+Baby, honestly, (baby, honestly), baby, honestly
+
+I lie for you, baby
+I die for you, baby
+Cry for you, baby
+But tell me what you've done for me
+For you, baby
+And only you, baby
+The things I do, baby
+But tell me what you've done for me
+
+(Tell me what you've done for me)
+Oh, tell me what you've done for me
+(Tell me what you've done for me)
+Tell me what you've done for me
+
+Oh
+You know I've given this everything
+Baby, honestly
+Tell me what you've done for me
+
+I lie for you, baby
+I die for you, baby
+Cry for you, baby
+But tell me what you've done for me
+For you, baby
+And only you, baby
+The things I do, baby
+But tell me what you've done for me
+
+(Tell me what you've done for me)
+But tell me what you've done for me
+(Tell me what you've done for me)
+But tell me what you've done for me
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Light Switch",
+      artist: "Charlie Puth",
+      lyrics: `Yeah
+
+Why you callin' at 11:30
+When you only wanna do me dirty? (Uh)
+But I hit right back 'cause you got that, that, yeah
+Why you always wanna act like lovers
+But you never wanna be each other's? (Uh)
+I say, "Don't look back," but I go right back and
+
+All of a sudden, I'm hypnotized
+You're the one that I can't deny
+Every time that I say, "I'm gonna walk away"
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this (no)
+You know how to just make me want
+
+You turn me on like a light switch
+When you're movin' your body around and around
+You got me in a tight grip (yeah)
+You know how to just make me want you, baby
+
+Do you love it when you keep me guessin'? (Me guessin')
+When you leave, and then you leave me stressin'? (Me stressin', uh, uh)
+But I can't stay mad when you walk like that, no (uh)
+Why you always wanna act like lovers
+But you never wanna be each other's? (Uh, uh)
+I say, "Don't look back," but I go right back and
+
+All of a sudden, I'm hypnotized (hypnotized)
+You're the one that I can't deny (can't deny)
+Every time that I say, "I'm gonna walk away" (yeah)
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this (no)
+You know how to just make me want
+
+You turn me on like a light switch (switch)
+When you're movin' your body around and around
+You got me in a tight grip (grip)
+You know how to just make me want you, baby
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (do)
+You want, you want, you want, you want
+You wanna keep me wantin' you (me wantin' you, girl)
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (you do)
+You want, you want, you want, you want (hey)
+You wanna keep me wantin' you
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this
+You know how to just make me want to
+
+You turn me on like a light switch
+When you're movin' your body around and around
+You got me in a tight grip
+You know how to just make me want you, baby
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (how you do)
+You want, you want, you want, you want
+You wanna keep me wantin' you (baby)
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (how you do)
+You want, you want, you want, you want
+You wanna keep me wantin' you
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Nothing but Trouble (Instagram Models)",
+      artist: "Lil Wayne, Charlie Puth",
+      lyrics: `I'm facing the bottle
+For all of my problems
+These Instagram models
+Are nothing but trouble
+She's going away now
+I'm going full throttle
+All these Instagram models
+I said they're nothing but trouble
+
+Uh, when I met her she was out for love
+Yeah, I bought her leather and some diamond studs
+Damn, when I met her she was molly'd up
+Fuck it, I said "Whatever" cause I'm not a judge
+No, all my niggas say she's not what's up
+Uh, I considered it but not enough
+Uh, she just wanted to be popular
+Uh, she just wanted ten thousand followers
+Oh, she posted, she posted, she posted
+They like it, they like it, repost it
+She party promoting, she hosting
+She posing, legs open, provoking
+It got my head smoking
+I tried to act like I don't notice
+Emotions, emotions, emotions, Lord
+
+I'm facing the bottle
+For all of my problems
+These Instagram models
+Are nothing but trouble
+She's going away now
+I'm going full throttle
+All these Instagram models
+I said they're nothing but trouble
+
+I had to leave that ho alone
+And get my mind right
+I had to go talk to my friends, I had to find Christ
+Lord I had to, open up my eyes and find light
+I was so green and all she wanted was that limelight
+Lord I, was so blinded by her highlights
+She had me not checking my Dm's
+Neither my likes
+Oh what, you modeling ma? Knock yourself out
+Open my heart to you when you lock yourself out, girl
+When I met her she was posse'd up
+In the section holding bottles up
+She just wanted to be popular
+She just wanted ten thousand followers
+
+I should have known from the very start
+That you weren't after my foolish heart
+No, you liar, liar, liar girl
+You got the world thinking you're a star
+But oh, you're not who you say you are
+I'm dying, dying, dying, girl
+
+I'm facing the bottle
+(I'm sipping and lighted and dipping in line
+But I'm coping)
+For all of my problems (I'm too open)
+These Instagram models (Glad I left her)
+Are nothing but trouble
+(But I don't know her Lord)
+She's going away now (Now it's over)
+I'm going full throttle (You drive me crazy)
+All these Instagram models
+I said they're nothing but trouble
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Attention",
+      artist: "Charlie Puth",
+      lyrics: `Whoa-oh, mm-hmm-mm
+
+You've been runnin' 'round, runnin' 'round, runnin' 'round throwin' that dirt all on my name
+'Cause you knew that I'd, knew that I'd, knew that I'd call you up, ah
+You've been goin' 'round, goin' 'round, goin' 'round every party in LA
+'Cause you knew that I'd, knew that I'd, knew that I'd be at one, oh (oh)
+
+I know that dress is karma, perfume regret
+You got me thinkin' 'bout when you were mine, oh
+And now I'm all up on ya, what'd you expect?
+But you're not comin' home with me tonight
+
+You just want attention, you don't want my heart
+Maybe you just hate the thought of me with someone new
+Yeah, you just want attention, I knew from the start
+You're just makin' sure I'm never gettin' over you, oh
+
+You were runnin' 'round, runnin' 'round, runnin' 'round throwin' that dirt all on my name
+'Cause you knew that I'd, knew that I'd, knew that I'd call you up
+Baby, now that we're, now that we're, now that we're right here, standin' face to face
+You already know, 'ready know, 'ready know that you won, oh
+
+I know that dress is karma (dress is karma), perfume regret (yeah)
+You got me thinkin' 'bout when you were mine (you got me thinking 'bout when you were mine)
+And now I'm all up on ya (all up on ya), what'd you expect? (Oh, baby)
+But you're not coming home with me tonight (oh, no)
+
+You just want attention, you don't want my heart
+Maybe you just hate the thought of me with someone new ('one new)
+Yeah, you just want attention (oh), I knew from the start (the start)
+You're just makin' sure I'm never gettin' over you (oh, you), oh
+
+What are you doin' to me? What are you doin', love? (What are you doin'?)
+What are you doin' to me? What are you doin', love? (What are you doin'?)
+What are you doin' to me? What are you doin', love? (What are you doin'?)
+What are you doin' to me? What are you doin', love?
+
+I know that dress is karma, perfume regret
+You got me thinkin' 'bout when you were mine
+And now I'm all up on ya, what'd you expect?
+But you're not comin' home with me tonight, huh
+
+You just want attention, you don't want my heart
+Maybe you just hate the thought of me with someone new
+Yeah, you just want attention, I knew from the start
+You're just makin' sure I'm never gettin' over you (over you)
+
+What are you doin' to me? (Hey) what are you doin', love? (What are you doin', love?)
+What are you doin' to me? What are you doin', love?
+
+Yeah, you just want attention (what are you doin' to me?)
+I knew from the start (what are you doin', love?)
+You're just makin' sure I'm never gettin' over you (what are you doin' to me? What are you doin', love?)
+Oh, oh-oh-oh-oh
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Home (feat. Hikaru Utada)",
+      artist: "Charlie Puth",
+      lyrics: `Through the rose-colored lenses
+And the white picket fences
+No matter how good this is
+It could never satisfy
+
+When it's you that I'm missing
+Now I sit in the kitchen
+Through the windowpane
+I watch the day turn to night
+
+It ain't a mystery
+That every time you leave
+That's when I feel the most alone, oh
+
+Ooh, don't you know
+That you're the one who makes this house a home (house a home)
+And so, when you go (whеn you go)
+It feels so cold without the soul
+You're the onе who makes this house a home
+
+Mm, mm
+一人の時間も大切
+誰にも妥協せず
+私だけのお城を築いた
+
+But it's you I was missing
+君に毎日ただいまと言わせてください
+
+行ってらしゃい
+君がいないこの家わ好きじゃない
+
+Ooh, don't you know (don't you know)
+That you're the one who makes this house a home (house a home)
+And so, when you go (so, when you go)
+夏でも凍えちゃいそう (凍えちゃいそう)
+君の温もりがhome
+
+Oh, you're the one (you're the one)
+You're the one who makes this house a home
+House a home, house a home, oh
+You're the one, you're the one, oh
+
+Mm
+It ain't a mystery
+That every time you leave
+That's when I feel the most alone, oh
+当たり前になりそうな時 (この時)
+思い出してほしい
+
+Ooh, don't you know (don't you know)
+That you're the one who makes this house a home, oh
+You're the one
+And so, when you go (when you go)
+It feels so cold without the soul (that soul)
+You're the one who makes this house a home
+
+ある日楽園で目が覚めても
+君がいなきゃ長居しないね
+どんな豪邸手に入れったて
+君がいなきゃハリボテ同然
+
+Ooh
+You're the one who makes this house a home
+You made this house a home, oh
+
+@VoiceShazamBot`
+    },
+    {
+      title: "See you again by Charlie Puth Lyrics Full Version No Rap",
+      artist: "Jed Baylen",
+      lyrics: `Lyrics are not available for this track.
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Charlie Puth Greatest Hits Collection",
+      artist: "Best of Charlie Puth",
+      lyrics: `Lyrics are not available for this track.
+
+@VoiceShazamBot`
+    },
+    {
+      title: "See You Again (feat. Charlie Puth)",
+      artist: "Wiz Khalifa",
+      lyrics: `It's been a long day without you, my friend
+And I'll tell you all about it when I see you again
+We've come a long way from where we began
+Oh, I'll tell you all about it when I see you again
+When I see you again
+
+Damn, who knew?
+All the planes we flew, good things we been through
+That I'd be standing right here talking to you
+'Bout another path, I know we loved to hit the road and laugh
+But something told me that it wouldn't last
+Had to switch up, look at things different, see the bigger picture
+Those were the days, hard work forever pays
+Now I see you in a better place (See you in a better place)
+Uh
+
+How can we not talk about family when family's all that we got?
+Everything I went through, you were standing there by my side
+And now you gon' be with me for the last ride
+
+It's been a long day without you, my friend
+And I'll tell you all about it when I see you again (I'll see you again)
+We've come a long way (Yeah, we came a long way)
+From where we began (You know we started)
+Oh, I'll tell you all about it when I see you again (I'll tell you)
+When I see you again
+
+Aah oh, aah oh
+Wooooh-oh-oh-oh-oh-oh
+Yeah
+
+First, you both go out your way and the vibe is feeling strong
+And what's small turned to a friendship, a friendship turned to a bond
+And that bond will never be broken, the love will never get lost (The love will never get lost)
+And when brotherhood come first, then the line will never be crossed
+Established it on our own when that line had to be drawn
+And that line is what we reached, so remember me when I'm gone (Remember me when I'm gone)
+
+How can we not talk about family when family's all that we got?
+Everything I went through you were standing there by my side
+And now you gon' be with me for the last ride
+
+So let the light guide your way, yeah
+Hold every memory as you go
+And every road you take
+Will always lead you home, home
+
+It's been a long day without you, my friend
+And I'll tell you all about it when I see you again
+We've come a long way from where we began
+Oh, I'll tell you all about it when I see you again
+When I see you again
+
+Aah oh, aah oh (Uh)
+Yeah, yeah (Yeah)
+
+Wooooh-oh-oh-oh-oh-oh (Yeah)
+When I see you again (Yeah, uh)
+See you again (Yeah, yeah, yeah)
+Ooh-ooh (Uh-huh, yup)
+
+When I see you again
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Washed Up",
+      artist: "Charlie Puth",
+      lyrics: `You couldn't count the grains of sand
+No one could ever have the time
+It's been so long since you've seen land
+Can't even see it in your mind
+
+Sailing the ocean, I always stay looking for you
+And when you surface, I know what to do
+
+Even when you're washed up on the lowest tide
+You never ask for help even when it's time
+If you're washed up on a lonely night
+I'll be the first one there until you say you're alright
+
+Sometimes the seas can be unfair
+They've never been known for being kind
+We gotta power through into these typhoons
+If we ever wanna see the sun
+
+Shine on the ocean, I always stay looking for you (oh)
+And when you surface, I know what to do
+
+Even when you're washed up on the lowest tide
+You never ask for help even when it's time
+If you're washed up on a lonely night
+I'll be the first one there until you say you're alright
+
+And no matter where the current goes
+And you can't see through the fog at all
+I'll still hear you cursin' out to the sky
+Why, why, why?
+
+Even when you're washed up on the lowest tide
+You never ask for help even when it's time
+If you're washed up on a lonely night (on a lonely night)
+I'll be the first one there until you say you're alright
+
+Lowest tide
+First one, when it's time
+Washed up, lonely night
+First one, say you're alright
+
+Lowest tide
+First one, when it's time
+Washed up, lonely night
+First one, say you're alright
+
+@VoiceShazamBot`
+    },
+    {
+      title: "I Don’t Think That I Like Her",
+      artist: "Charlie Puth",
+      lyrics: `Get her name and get her number
+Find out all of the things that we have in common
+Never all the differences, ooh, yeah
+Meet her parents, meet her brother
+Then she starts sleepin' over the crib on weekends
+Like a real relationship, oh, no
+
+For me, the stars are alignin'
+But for her, it's bad timin'
+So she just can't be mine
+
+I don't think that I like her anymore
+Girls are all the same
+All they wanna do is break my heart, my heart, ah-ah
+I don't think that I like her anymore
+Girls are all the same
+They just wanna see me fall apart, apart, ah-ah
+
+So I hook up on a rebound
+And I say that I'm gonna be single for life
+But she's so pretty and nice (pretty and nice)
+So I make just one exception
+But I find out eventually I'm not her type
+Baby, that's the reason why, that
+
+For me, the stars are alignin'
+But for her, it's bad timin'
+So she just can't be mine
+
+I don't think that I like her anymore (yeah)
+Girls are all the same
+All they wanna do is break my heart, my heart, ah-ah
+I don't think that I like her anymore (no)
+Girls are all the same
+They just wanna see me fall apart, apart, ah-ah
+
+I'm trying not to be bitter
+But damn it, I miss her
+'Cause she's one of a kind (one of a kind)
+For me, the stars are alignin'
+But for her, it's bad timin'
+So she just can't be mine
+
+I don't think that I like her anymore
+Girls are all the same
+All they wanna do is break my heart, my heart, ah-ah
+I don't think that I like her anymore
+Girls are all the same
+They just wanna see me fall apart, apart, ah-ah
+
+Then we fall, fall, fall, fall apart now
+I don't think that I like her anymore
+Girls are all the same
+They just wanna see me fall apart, apart, ah-ah
+
+@VoiceShazamBot`
+    },
+    {
+      title: "The Way I Am (Taska Black Remix)",
+      artist: "Charlie Puth",
+      lyrics: `Maybe I'mma get a little anxious
+Maybe I'mma get a little shy
+'Cause everybody's trying to be famous
+And I'm just trying to find a place to hide
+All I wanna do is just hold somebody
+But no one ever wants to get to know somebody
+I don't even know how to explain this
+I don't even think I'm gonna try
+And that's ok
+I promise myself one day
+I'mma tell 'em all
+I'mma tell 'em all that you could either hate me or love me
+But that's just the way I...
+But that's just the way I...
+But that's just the way I am
+That's just the way I...
+Maybe I'ma get a little nervous
+Maybe I don't go out anymore (oh)
+Feelin' like I really don't deserve this (-serve this)
+Life ain't nothing like it was before
+'Cause all I wanna do is just hold somebody
+But no one ever wants to get to know somebody
+If you go and look under the surface (surface)
+Baby, I'm a little insecure
+And that's okay
+I promised myself one day
+I'mma tell 'em all
+I'mma tell 'em all that you could either hate me or love me
+But that's just the way I am
+I'mma tell 'em all
+I'mma tell 'em all that you could either hate me or love me
+But that's just the way I...
+But that's just the way I...
+But that's just the way I am
+That's just the way I am
+That's just the way I am
+That's just the way I
+That's just the way I am
+Am, am
+Yeah, this is what you wanted
+Oh, this is what you wanted
+I am, am, am
+Yeah, this is what you wanted
+Oh, this is what you wanted all along
+Oh, this is what you wanted all along
+But that's just the way I...
+But that's just the way I...
+That's just the way I am
+But that's just the way I am
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Sober",
+      artist: "G-Eazy, Charlie Puth",
+      lyrics: `Oh, I know that I'll regret this when I'm sober
+But, every shot I'm getting closer, getting closer
+Is it true that 80 proof is the reason I'm with you?
+Oh, I know that I'll regret this when it's over
+
+Ooh-ooh, ooh-ooh (You know)
+Ooh-ooh, ooh (Story of my fucking life, haha)
+I just know that I'll regret this when it's over (Eazy)
+
+Uh, yeah, I might regret this when tomorrow comes
+But, them drunk nights are more fun than sober ones
+With every shot, they're like, aw, here Kobe comes
+But I got this bad bitch trying to throw me buns
+If I listened to my Uncs, all them older ones
+They all talk about karma, how it slowly comes (Uh)
+But, life is short, enjoy it while you're young
+Spend my bank account tonight and have to borrow funds
+
+It all started with a light glass
+Now I'm asking, how long could tonight last?
+Man, she had an eeh face but a tight ass
+If I had a shot less, then I might pass
+But, I'm faded and I got a little sedated
+I can't believe we made it, every night we celebrate it
+I live like Jim Morrison, no telling where I'll take it
+I take her to her room and I tell her get naked
+
+Oh, I know that I'll regret this when I'm sober
+But, every shot I'm getting closer, getting closer
+Is it true that 80 proof is the reason I'm with you?
+Oh, I know that I'll regret this when it's over
+
+Ooh-ooh, ooh-ooh
+Ooh-ooh, ooh
+I just know that I'll regret this when it's over
+Ooh-ooh, ooh-ooh
+Ooh-ooh, ooh
+I just know that I'll regret this when it's over
+
+I slipped up with my ex and I smashed again
+Stayed over, now she's about to get attached again
+Walls built up around, they come crashing in
+Passed out at 6 a.m., but she's up at 10
+Doing this was not in my plans
+She got up and saw rubbers in the trash can
+Hoop earrings, some bitch left on my nightstand
+Cussed me out and stormed off like, alright then (Uh)
+
+On both sides, that was bad for 'em
+Why do people do things that be bad for 'em?
+Say we done with these things, then we ask for 'em
+When the sun comes down, then we transform
+Yeah, you can probably bet this
+By this time tomorrow, I'll probably regret this
+Try, but it all falls down like Tetris
+No telling where an 80 proof gets us
+
+Oh, I know that I'll regret this when I'm sober
+But, every shot I'm getting closer, getting closer
+Is it true that 80 proof is the reason I'm with you?
+Oh, I know that I'll regret this when it's over
+
+Ooh-ooh, ooh-ooh
+Ooh-ooh, ooh
+I just know that I'll regret this when it's over
+Ooh-ooh, ooh-ooh
+Ooh-ooh, ooh
+I just know that I'll regret this when it's over
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Mother (Fedde Le Grand Remix)",
+      artist: "Charlie Puth",
+      lyrics: `He's such a nice boy, so well-mannered
+He's so much better than the last one you brought around
+Please and thank you, everything matters
+I'm gonna make sure that she knows I'm the best she's found
+
+For the moment she walks out that door
+I'm not pretending anymore
+If your mother knew all of the things that we do
+If your mother knew all the things we do
+If your mother knew, she'd keep me so far from you
+If your mother knew all the things we do
+
+If your mother knew
+If your mother knew
+If your-, f your-, if your-, if your-, if your-
+If, if, if, if, if, if...
+If your mother knew, she'd keep me so far from you
+
+Sneak out the window, pass over pillows
+I'll be waiting in the car right around the block
+Back of the Benzo (of the Benzo)
+More than a friend zone (more than a friend zone)
+We've been hiding since the time they forgot to knock
+
+For the moment she walks out that door (she walks out that door)
+I'm not pretending anymore
+
+Next time that she sees me
+She gon' act like she don't know, me (no)
+'Cause she knows all of the story
+Now your daddy wants to kill me (yeah, yeah)
+Next time that she sees me
+She gon' act like she don't know, me (no)
+'Cause she knows all of the story
+Now your daddy wants to kill me (yeah, yeah)
+(If your mother knew)
+
+For the moment she walks out that door
+I'm not pretending anymore
+
+If your mother knew all of the things that we do
+
+Knew, knew
+
+Knew, knew
+Knew, knew
+Knew, knew
+Knew, knew
+If your mother knew all of the things we do
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Marks On My Neck",
+      artist: "Charlie Puth",
+      lyrics: `All I got left are the marks on my neck after you let me go
+It's hard to forget when you messed up my head
+'Cause I let you get too close, yeah
+
+I shoulda never have, never have, never opened my heart again
+Wasn't worth it
+Why did I let you, I let you, I let you get all under my skin
+Wasn't worth it
+
+On the surface, you were perfect
+But you didn't really come to stay
+Now when I look in the mirror
+I slowly watch you fade away
+
+'Cause all I got left are the marks on my neck
+After you let me go
+It's hard to forget when you messed up my head
+'Cause I let you get too close
+Now all I got left are the marks on my neck
+After you let me go
+It's hard to forget when you messed up my head
+'Cause I let you get too close, yeah
+
+I tried to cover it, cover it, cover it with foundation
+Didn't help it
+Tried to get over you, over you, over you, but you dug in
+And I felt it
+
+On the surface, you were perfect
+But you didn't really come to stay
+Now when I look in the mirror
+I slowly watch you fade away
+
+'Cause all I got left are the marks on my neck
+After you let me go
+It's hard to forget when you messed up my head
+'Cause I let you get too close, oh
+Now all I got left are the marks on my neck
+After you let me go (let me go)
+It's hard to forget when you messed up my head
+'Cause I let you get too close, yeah
+
+It's hard to forget when you messed up my head
+'Cause I let you get too close
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Girlfriend (Live From Corden)",
+      artist: "Charlie Puth",
+      lyrics: `Yeah
+
+Tired of this conversation
+We didn't come all this way
+To touch a little, kiss a little
+All night long
+You wanna hear me say it
+I know I kept you waitin'
+Just a little, just a little
+All night long
+
+Can't stop
+'Til you're lyin' right here next to me
+I should stop
+But I think I'll do it anyway
+
+Baby, would you ever wanna be my girlfriend?
+I don't wanna play no games
+This is more than just a phase
+Baby, would you ever wanna be my girlfriend?
+If you want it, let me know
+We could make this official
+
+Don't we look perfect, baby?
+Let's take this further, baby
+Just a little, just a little
+All night long
+If I was your boyfriend
+I, I'd be givin' you all my time
+Not just a little, just a little
+All night long
+
+Can't stop
+'Til you're lyin' right here next to me
+I should stop
+But I think I'll do it anyway
+
+Baby, would you ever wanna be my girlfriend?
+I don't wanna play no games
+This is more than just a phase
+Baby, would you ever wanna be my girlfriend?
+If you want it, let me know
+We could make this official
+
+Hold on, you're makin' me, uh
+Hold on, you're makin' me, no
+My girlfriend
+Hold on, you're makin' me, uh
+Hold on, you're makin' me, oh
+My girlfriend
+
+I can't stop
+Whoa
+Know I should stop
+But I just do it anyway
+I just do it anyway
+I just do it anyway
+I just do it anyway
+
+Baby, would you ever wanna be my girlfriend?
+I don't wanna play no games
+This is more than just a phase
+Baby, would you ever wanna be my girlfriend?
+If you want it, let me know
+We could make this official
+
+Hold on, you're makin' me, uh
+Hold on, you're makin' me, uh
+My girlfriend
+
+@VoiceShazamBot`
+    },
+    {
+      title: "As You Are (feat. Shy Carter)",
+      artist: "Charlie Puth",
+      lyrics: `Thinking back in time when I had you to lose
+Those were the days baby you were truth
+And nothing you could do would ever change that
+You riding with me, me riding for you
+We followed our hearts don't forget what they do
+
+But somewhere down the line I left you hanging
+For you, I could climb
+Mount Kilimanjaro a thousand times
+Oh my friend, I'll never break your heart again
+
+'Cause I, I will always love you
+Baby I could never judge you
+I would take you as you are, are, are, are, are
+I, I will always love you
+Baby I could never judge you
+I would take you as you are, are, are, are, are
+
+You know me like inside and out, how I feel
+Nothing more nothing less you're the real
+
+I wanna take this time to thank you baby
+For you, I could climb
+Mount Kilimanjaro a thousand times
+Oh my friend, I'll never break your heart again
+
+'Cause I, I will always love you
+Baby I could never judge you
+I would take you as you are, are, are, are, are
+I, I will always love you
+Baby I could never judge you
+I would take you as you are, are, are, are, are
+
+So let it be known now
+You're queen to my throne now
+It's you at all times
+I'll never reject you
+I'll love and respect you
+'Cause you're my lifeline
+Only thing on my wishlist
+Your love and forgiveness
+For that I will climb
+(Mount Kilimanjaro a thousand times)
+Why would I fight it?
+I know that it's right when you're holding my hand
+I knew when I saw you
+That God was just giving me a second chance
+I'll climb every mountain
+And scream at the top of my lungs that I'm yours
+You know that I'm yours
+
+'Cause I, I will always love you
+(I will always love you)
+Baby I could never judge you
+(I could never judge you)
+I would take you as you are, are, are, are, are
+I, I will always love you
+(Darling I will always love you
+I will always love you)
+Baby I could never judge you
+I would take you as you are, are, are, are, are
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Summer Feelings [Jengi Remix] (feat. Charlie Puth)",
+      artist: "Lennon Stella",
+      lyrics: `I hear the rhythm of waves hittin' on the shore
+And I can swear they're speaking
+Speaking
+Speaking
+
+They're telling me to relax
+I'm not good at that
+But now I know I need it
+Need it
+Need it (I slide)
+
+Ooh, now what you do?
+My tan lines tell the truth (I slide)
+Yeah, on Venice Beach got sand all in my shoes
+(Tonight)
+Ooh, unlock me loose
+See the sunset from the roof (that's right)
+Yeah, that crystal blue, and I came out someone new
+
+Hey
+Getting in my summer feeling
+And I'm trying to keep it cool
+Way up here in my summer feeling
+And I found a piece of me that I never knew
+
+You got my heart, and I'm head over heels in love
+In California, dreaming
+Dreaming
+Dreaming, yeah
+Touching the stars, and then dragging them down to Earth
+That California feeling
+Feeling
+Feeling
+
+Oh, now what you do?
+Your brown eyes tell the truth (I slide)
+Yeah
+Down on the beach, I'm staying out late for you
+(Tonight)
+Oh, unlock you loose
+See the sunset from the roof (that's right)
+Yeah
+You're good to me, and I came out someone new
+
+Hey
+Getting in my summer feeling
+And I'm trying to keep it cool
+Way up here in my summer feelings
+And I found a piece of me that I never knew
+
+Hey
+Getting in my summer feeling
+And I'm trying to keep it cool
+Way up here in my summer feelings
+And I found a piece of me that I never knew
+
+Hey
+Getting in my summer feelings
+And I'm trying to keep it cool
+Way up here in my summer feelings
+And I found a piece of me that I never knew
+
+That's right, tonight
+
+@VoiceShazamBot`
+    },
+    {
+      title: "We Don't Talk Anymore (feat. Selena Gomez)",
+      artist: "Charlie Puth",
+      lyrics: `We don't talk anymore, we don't talk anymore
+We don't talk anymore like we used to do
+We don't love anymore, what was all of it for?
+Ooh, we don't talk anymore like we used to do
+
+I just heard you found the one you've been lookin'
+You've been lookin' for
+I wish I would have known that wasn't me
+'Cause even after all this time, I still wonder
+Why I can't move on
+Just the way you did so easily
+
+Don't wanna know
+What kinda dress you're wearin' tonight
+If he's holdin' on to you so tight
+The way I did before
+
+I overdosed
+Should've known your love was a game
+Now I can't get you out of my brain
+Ooh, it's such a shame
+
+That we don't talk anymore, we don't talk anymore
+We don't talk anymore like we used to do
+We don't love anymore, what was all of it for?
+Ooh, we don't talk anymore like we used to do
+
+I just hope you're lyin' next to somebody
+Who knows how to love you like me
+There must be a good reason that you're gone
+Every now and then
+I think you might want me to come show up at your door
+But I'm just too afraid that I'll be wrong
+
+Don't wanna know
+If you're lookin' into her eyes
+If she's holdin' on to you so tight
+The way I did before
+
+I overdosed
+Should've known your love was a game
+Now I can't get you out of my brain
+Ooh, it's such a shame
+
+That we don't talk anymore (we don't, we don't)
+We don't talk anymore (we don't, we don't)
+We don't talk anymore like we used to do
+We don't love anymore (we don't, we don't)
+What was all of it for? (We don't, we don't)
+Ooh, we don't talk anymore like we used to do
+
+Like we used to do
+
+Don't wanna know
+What kinda dress you're wearin' tonight
+If he's givin' it to you just right
+The way I did before
+
+I overdosed
+Should've known your love was a game
+Now I can't get you out of my brain
+Ooh, it's such a shame
+
+That we don't talk anymore (we don't, we don't)
+We don't talk anymore (we don't, we don't)
+We don't talk anymore like we used to do
+We don't love anymore (we don't, we don't)
+What was all of it for? (We don't, we don't)
+Ooh, we don't talk anymore like we used to do
+
+We don't talk anymore (don't wanna know)
+(What kinda dress you're wearin' tonight) oh
+(If he's holdin' on to you so tight) oh
+The way I did before
+
+We don't talk anymore (I overdosed)
+(Should've known your love was a game) oh
+(Now I can't get you out of my brain) whoa
+Ooh, it's such a shame that we don't talk anymore
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Summer Feelings [Jengi Remix] (feat. Charlie Puth)",
+      artist: "Lennon Stella",
+      lyrics: `I hear the rhythm of waves hittin' on the shore
+And I can swear they're speaking
+Speaking
+Speaking
+
+They're telling me to relax
+I'm not good at that
+But now I know I need it
+Need it
+Need it (I slide)
+
+Ooh, now what you do?
+My tan lines tell the truth (I slide)
+Yeah, on Venice Beach got sand all in my shoes
+(Tonight)
+Ooh, unlock me loose
+See the sunset from the roof (that's right)
+Yeah, that crystal blue, and I came out someone new
+
+Hey
+Getting in my summer feeling
+And I'm trying to keep it cool
+Way up here in my summer feeling
+And I found a piece of me that I never knew
+
+You got my heart, and I'm head over heels in love
+In California, dreaming
+Dreaming
+Dreaming, yeah
+Touching the stars, and then dragging them down to Earth
+That California feeling
+Feeling
+Feeling
+
+Oh, now what you do?
+Your brown eyes tell the truth (I slide)
+Yeah
+Down on the beach, I'm staying out late for you
+(Tonight)
+Oh, unlock you loose
+See the sunset from the roof (that's right)
+Yeah
+You're good to me, and I came out someone new
+
+Hey
+Getting in my summer feeling
+And I'm trying to keep it cool
+Way up here in my summer feelings
+And I found a piece of me that I never knew
+
+Hey
+Getting in my summer feeling
+And I'm trying to keep it cool
+Way up here in my summer feelings
+And I found a piece of me that I never knew
+
+Hey
+Getting in my summer feelings
+And I'm trying to keep it cool
+Way up here in my summer feelings
+And I found a piece of me that I never knew
+
+That's right, tonight
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Left and Right (feat. Jung Kook of BTS)",
+      artist: "Charlie Puth & Jung Kook & BTS",
+      lyrics: `Memories follow me left and right
+I can feel you over here, I can feel you over here
+You take up every corner of my mind
+Whatcha gon' do now?
+
+Ever since the d-day y-you went away
+No, I don't know how
+How to erase your body from out my brain
+Whatcha gon' do now?
+Maybe I should just focus on me instead
+But all I think about
+Are the nights we were tangled up in your bed
+
+Oh no (oh no)
+Oh no (oh no)
+You're going 'round in circles
+Got you stuck up in my head, yeah
+
+Memories follow me left and right
+I can feel you over here, I can feel you over hеre
+You take up evеry corner of my mind
+Your love stays with me day and night
+I can feel you over here, I can feel you over here
+You take up every corner of my mind
+Whatcha gon' do now?
+
+Ever since the d-day y-you went away
+Someone tell me how
+How much more do I gotta drink for the pain?
+Whatcha gon' do now?
+You do things to me that I just can't forget
+Now all I think about
+All the nights we were tangled up in your bed
+
+Oh no (oh no)
+Oh no (oh no)
+You're going 'round in circles
+Got you stuck up in my head, yeah
+
+Memories follow me left and right
+I can feel you over here, I can feel you over here
+You take up every corner of my mind (of my mind)
+Your love stays with me day and night
+I can feel you over here, I can feel you over here
+You take up every corner of my mind
+Whatcha gon' do now?
+
+Did you know you're the one that got away?
+And even now, baby, I'm still not okay
+Did you know that my dreams, they're all the same?
+Every time I close my eyes
+
+Memories follow me left and right
+I can feel you over here, I can feel you over here
+You take up every corner of my mind
+Whatcha gon' do now?
+Your love stays with me day and night
+I can feel you over here, I can feel you over here (oh)
+You take up every corner of my mind
+Whatcha gon' do now?
+
+(Oh, whoa)
+I can feel you over here, I can feel you over here
+You take up every corner of my mind
+Whatcha gon' do now?
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Losing My Mind",
+      artist: "Charlie Puth",
+      lyrics: `I'll run, yeah, I'll, yeah
+I'll run, yeah, like my mind
+
+It's funny how I got just exactly what I want
+I'll try to have fun some other time
+I thought money was enough, it's just a temporary rush
+I'll try to go find some other high
+
+Don't know why I wanna make it even harder
+But I'm not the kinda man to take the easy road
+
+So much to do and not enough time
+Not enough time, oh, I got
+So much to lose, I'm losing my mind
+I'm losing my mind, oh, my mind
+
+I'll run, yeah, I'll, I'll run, yeah
+I'll run, yeah, like my mind
+
+I'm sorry that I'm not there to give you what you want
+I'll think about us some other time
+And I'm sorry that I can't be the perfect type of man
+I'll think about us some other time
+
+Don't know why I wanna make it even harder
+I'm not the kinda man to take the easy road
+
+I got so much to do and not enough time
+Not enough time, oh, I got
+So much to lose, I'm losing my mind
+I'm losing my mind, oh, my mind
+
+Nothing to lose, nothing to lose
+I'm losing my mind, I'm losing my mind, ooh, ooh
+Nothing to lose, nothing to lose
+I'm losing my mind, I'm losing my mind, ooh, ooh (my mind)
+
+I'll run, yeah, I'll, yeah
+I'll run, yeah, like my mind
+I'll run, yeah, I'll, yeah
+I'll run, yeah, like my mind
+
+I got so much to do and not enough time
+Not enough time, oh, I got
+So much to lose, I'm losing my mind
+I'm losing my mind, oh, my mind
+
+Nothing to lose (I'm gonna lose my mind), nothing to lose (swear)
+I'm losing my mind, I'm losing my mind, ooh, ooh
+Nothing to lose (I'm gonna lose my mind), nothing to lose (swear)
+I'm losing my mind, I'm losing my mind, ooh, ooh
+
+All I hear, and said all that he need
+
+@VoiceShazamBot`
+    },
+    {
+      title: "One Call Away (KLYMVX Remix)",
+      artist: "Charlie Puth",
+      lyrics: `I'm only one call away
+I'll be there to save the day
+Superman got nothing on me
+I'm only one call away
+
+Call me, baby, if you need a friend
+I just wanna give you love
+C'mon, c'mon, c'mon
+Reaching out to you, so take a chance
+
+No matter where you go
+Know you're not alone
+
+I'm only one call away
+I'll be there to save the day
+Superman got nothing on me
+I'm only one call away
+
+Come along with me and don't be scared
+I just wanna set you free
+C'mon, c'mon, c'mon
+You and me can make it anywhere
+But for now, we can stay here for a while
+'Cause you know, I just wanna see your smile
+
+No matter where you go
+You know you're not alone
+
+I'm only one call away
+I'll be there to save the day
+Superman got nothing on me
+I'm only one call away
+
+And when you're weak I'll be strong
+I'm gonna keep holding on
+Now don't you worry, it won't be long, darling
+And when you feel like hope is gone
+Just run into my arms
+
+I'm only one call away
+I'll be there to save the day
+Superman got nothing on me
+I'm only one, I'm only one
+
+Call away
+I'll be there to save the day
+Superman got nothing on me
+I'm only one call away
+I'm only one call away
+
+I'm only one call away
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Marvin Gaye (feat. Meghan Trainor)",
+      artist: "Charlie Puth Meghan Trainor",
+      lyrics: `Lyrics are not available for this track.
+
+@VoiceShazamBot`
+    },
+    {
+      title: "That's Hilarious",
+      artist: "Charlie Puth",
+      lyrics: `Look how all the tables
+Look how all the tables have turned
+Guess you're finally realizin' how bad you messed it up
+Girl, you're only makin'
+Girl, you're only makin' it worse
+When you call like you always do when you want someone
+
+You took away a year
+Of my fuckin' life
+And I can't get it back no more
+So when I see those tears
+Comin' out your eyes
+I hope it's me they're for
+
+You didn't love when you had me
+But now, you need me so badly
+You can't be serious (ha-ha-ha)
+That's hilarious (ha-ha-ha-ha-ha)
+Thinkin' I would still want you
+After the things you put me through
+Yeah, you're delirious (ha-ha-ha)
+That's hilarious (ha-ha-ha-ha-ha)
+
+Now you put the blame in (now you put the blame in)
+Now you put the blame in reverse
+Tryna make me feel guilty for everything you've done
+You're another lesson (you're another lesson)
+You're just another lesson I learned
+Don't give your heart to a girl who's still got a broken one
+
+You took away a year (took away a year)
+Of my fuckin' life
+And I can't get it back no more
+So when I see those tears (when I see those tears)
+Comin' out your eyes
+I hope it's me they're for
+
+You didn't love when you had me
+But now, you need me so badly
+You can't be serious (ha-ha-ha)
+That's hilarious (ha-ha-ha-ha-ha)
+Thinkin' I would still want you
+After the things you put me through
+Yeah, you're delirious (ha-ha-ha)
+That's hilarious (ha-ha-ha-ha-ha)
+You didn't love when you had me
+But now, you need me so badly
+You can't be serious (you can't be serious) (ha-ha-ha)
+That's hilarious (that's hilarious) (ha-ha-ha-ha-ha)
+Thinkin' I would still want you (oh)
+After the things you put me through
+Yeah, you're delirious (yeah, you're delirious) (ha-ha-ha)
+That's hilarious (that's hilarious) (ha-ha-ha-ha-ha)
+
+(Ha-ha-ha)
+(Ha-ha-ha-ha-ha)
+
+@VoiceShazamBot`
+    },
+    {
+      title: "I Don’t Think That I Like Her",
+      artist: "Charlie Puth",
+      lyrics: `Get her name and get her number
+Find out all of the things that we have in common
+Never all the differences, oh, yeah
+Meet her parents, meet her brother
+Then she starts sleeping over the crib on weekends
+Like a real relationship, oh, no
+
+For me, the stars are aligning
+But for her, it's bad timing
+So she just can't be mine
+
+I don't think that I like her anymore
+Girls are all the same
+All they wanna do is break my heart, my heart, oh-oh
+I don't think that I like her anymore
+Girls are all the same
+They just wanna see me fall apart, apart, oh-oh
+
+So I woke up on a rebound
+And I say that I'm gonna be single for life
+But she's so pretty and nice (pretty and nice)
+So I make just one exception
+But I find out eventually I'm not her type
+Baby, that's the reason why, that
+
+For me, the stars are aligning
+But for her, it's bad timing
+So she just can't be mine
+
+I don't think that I like her anymore (yeah)
+Girls are all the same
+All they wanna do is break my heart, my heart, oh-oh
+I don't think that I like her anymore (no)
+Girls are all the same
+They just wanna see me fall apart, apart, oh-oh
+
+(Yeah, yeah)
+
+I'm trying not to be bitter
+But damn it, I'll miss her
+'Cause she's one of a kind (one of a kind)
+For me, the stars are aligning
+But for her, it's bad timing
+So she just can't be mine
+
+I don't think that I like her anymore
+Girls all are the same
+All they wanna do is break my heart, my heart, oh-oh
+I don't think that I like her anymore
+Girls all are the same
+They just wanna see me fall apart, apart (yeah), oh-oh
+
+(I don't think that I like her anymore)
+(Girls are all the same)
+(All they wanna do...)
+Then we fall, we fall, fall, fall apart now
+I don't think that I like her anymore
+Girls are all the same
+They just wanna see me fall apart, apart, oh-oh
+
+@VoiceShazamBot`
+    },
+    {
+      title: "I Don’t Think That I Like Her",
+      artist: "Charlie Puth",
+      lyrics: `Get her name and get her number
+Find out all of the things that we have in common
+Never all the differences, oh, yeah
+Meet her parents, meet her brother
+Then she starts sleeping over the crib on weekends
+Like a real relationship, oh, no
+
+For me, the stars are aligning
+But for her, it's bad timing
+So she just can't be mine
+
+I don't think that I like her anymore
+Girls are all the same
+All they wanna do is break my heart, my heart, oh-oh
+I don't think that I like her anymore
+Girls are all the same
+They just wanna see me fall apart, apart, oh-oh
+
+So I woke up on a rebound
+And I say that I'm gonna be single for life
+But she's so pretty and nice (pretty and nice)
+So I make just one exception
+But I find out eventually I'm not her type
+Baby, that's the reason why, that
+
+For me, the stars are aligning
+But for her, it's bad timing
+So she just can't be mine
+
+I don't think that I like her anymore (yeah)
+Girls are all the same
+All they wanna do is break my heart, my heart, oh-oh
+I don't think that I like her anymore (no)
+Girls are all the same
+They just wanna see me fall apart, apart, oh-oh
+
+(Yeah, yeah)
+
+I'm trying not to be bitter
+But damn it, I'll miss her
+'Cause she's one of a kind (one of a kind)
+For me, the stars are aligning
+But for her, it's bad timing
+So she just can't be mine
+
+I don't think that I like her anymore
+Girls all are the same
+All they wanna do is break my heart, my heart, oh-oh
+I don't think that I like her anymore
+Girls all are the same
+They just wanna see me fall apart, apart (yeah), oh-oh
+
+(I don't think that I like her anymore)
+(Girls are all the same)
+(All they wanna do...)
+Then we fall, we fall, fall, fall apart now
+I don't think that I like her anymore
+Girls are all the same
+They just wanna see me fall apart, apart, oh-oh
+
+@VoiceShazamBot`
+    },
+    {
+      title: "See You Again (feat. Charlie Puth)",
+      artist: "Wiz Khalifa",
+      lyrics: `It's been a long day without you, my friend
+And I'll tell you all about it when I see you again
+We've come a long way from where we began
+Oh, I'll tell you all about it when I see you again
+When I see you again
+
+Damn, who knew?
+All the planes we flew, good things we been through
+That I'd be standin' right here talkin' to you
+'Bout another path, I know we loved to hit the road and laugh
+But somethin' told me that it wouldn't last
+Had to switch up, look at things different, see the bigger picture
+Those were the days, hard work forever pays
+Now I see you in a better place (see you in a better place)
+Uh
+
+How can we not talk about family when family's all that we got?
+Everythin' I went through, you were standin' there by my side
+And now you gon' be with me for the last ride
+
+It's been a long day without you, my friend
+And I'll tell you all about it when I see you again (I'll see you again)
+We've come a long way (yeah, we came a long way)
+From where we began (you know where we started)
+Oh, I'll tell you all about it when I see you again (let me tell you)
+When I see you again
+
+Oh, oh
+Ooh (yeah)
+
+First, you both go out your way and the vibe is feelin' strong
+And what's small turned to a friendship, a friendship turned to a bond
+And that bond'll never be broken, the love will never get lost
+(The love never get lost)
+And when brotherhood come first, then the line'll never be crossed
+Established it on our own when that line had to be drawn
+And that line is what we reached, so remember me when I'm gone
+(Remember me when I'm gone)
+
+How can we not talk about family when family's all that we got?
+Everythin' I went through, you were standin' there by my side
+And now you gon' be with me for the last ride
+
+So let the light guide your way, yeah
+Hold every memory as you go
+And every road you take
+Will always lead you home, home
+
+It's been a long day without you, my friend
+And I'll tell you all about it when I see you again
+We've come a long way from where we began
+Oh, I'll tell you all about it when I see you again
+When I see you again
+
+Oh (uh), oh (yeah-yeah, yeah)
+Ooh (yo, yo, uh)
+When I see you again (see you again, yeah, yeah)
+Oh (yeah), oh (yeah, yeah, oh-oh)
+Ooh (uh-huh, yup)
+When I see you again
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Light Switch",
+      artist: "Charlie Puth",
+      lyrics: `Yeah
+
+Why you callin' at 11:30
+When you only wanna do me dirty? (Uh)
+But I hit right back 'cause you got that, that, yeah
+Why you always wanna act like lovers
+But you never wanna be each other's? (Uh)
+I say, "Don't look back," but I go right back and
+
+All of a sudden, I'm hypnotized
+You're the one that I can't deny
+Every time that I say, "I'm gonna walk away"
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this (no)
+You know how to just make me want
+
+You turn me on like a light switch
+When you're movin' your body around and around
+You got me in a tight grip (yeah)
+You know how to just make me want you, baby
+
+Do you love it when you keep me guessin'? (Me guessin')
+When you leave, and then you leave me stressin'? (Me stressin', uh, uh)
+But I can't stay mad when you walk like that, no (uh)
+Why you always wanna act like lovers
+But you never wanna be each other's? (Uh, uh)
+I say, "Don't look back," but I go right back and
+
+All of a sudden, I'm hypnotized (hypnotized)
+You're the one that I can't deny (can't deny)
+Every time that I say, "I'm gonna walk away" (yeah)
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this (no)
+You know how to just make me want
+
+You turn me on like a light switch (switch)
+When you're movin' your body around and around
+You got me in a tight grip (grip)
+You know how to just make me want you, baby
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (do)
+You want, you want, you want, you want
+You wanna keep me wantin' you (me wantin' you, girl)
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (you do)
+You want, you want, you want, you want (hey)
+You wanna keep me wantin' you
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this
+You know how to just make me want to
+
+You turn me on like a light switch
+When you're movin' your body around and around
+You got me in a tight grip
+You know how to just make me want you, baby
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (how you do)
+You want, you want, you want, you want
+You wanna keep me wantin' you (baby)
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (how you do)
+You want, you want, you want, you want
+You wanna keep me wantin' you
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Light Switch",
+      artist: "Charlie Puth",
+      lyrics: `Yeah
+
+Why you callin' at 11:30
+When you only wanna do me dirty? (Uh)
+But I hit right back 'cause you got that, that, yeah
+Why you always wanna act like lovers
+But you never wanna be each other's? (Uh)
+I say, "Don't look back," but I go right back and
+
+All of a sudden, I'm hypnotized
+You're the one that I can't deny
+Every time that I say, "I'm gonna walk away"
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this (no)
+You know how to just make me want
+
+You turn me on like a light switch
+When you're movin' your body around and around
+You got me in a tight grip (yeah)
+You know how to just make me want you, baby
+
+Do you love it when you keep me guessin'? (Me guessin')
+When you leave, and then you leave me stressin'? (Me stressin', uh, uh)
+But I can't stay mad when you walk like that, no (uh)
+Why you always wanna act like lovers
+But you never wanna be each other's? (Uh, uh)
+I say, "Don't look back," but I go right back and
+
+All of a sudden, I'm hypnotized (hypnotized)
+You're the one that I can't deny (can't deny)
+Every time that I say, "I'm gonna walk away" (yeah)
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this (no)
+You know how to just make me want
+
+You turn me on like a light switch (switch)
+When you're movin' your body around and around
+You got me in a tight grip (grip)
+You know how to just make me want you, baby
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (do)
+You want, you want, you want, you want
+You wanna keep me wantin' you (me wantin' you, girl)
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (you do)
+You want, you want, you want, you want (hey)
+You wanna keep me wantin' you
+
+You turn me on like a light switch
+When you're movin' your body around and around
+Now, I don't wanna fight this
+You know how to just make me want to
+
+You turn me on like a light switch
+When you're movin' your body around and around
+You got me in a tight grip
+You know how to just make me want you, baby
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (how you do)
+You want, you want, you want, you want
+You wanna keep me wantin' you (baby)
+
+C'mon, c'mon, c'mon, c'mon
+C'mon and show me how you do (how you do)
+You want, you want, you want, you want
+You wanna keep me wantin' you
+
+@VoiceShazamBot`
+    },
+    {
+      title: "I Hope (feat. Charlie Puth)",
+      artist: "Gabby Barrett",
+      lyrics: `Yeah, yeah
+Ooh, oh
+Oh, oh
+Yeah
+
+I, I hope she makes you smile
+The way you made me smile
+On the other end of a phone
+In the middle of a highway, driving alone
+
+Oh, baby, I, I hope you hear a song
+That makes you sing along
+And gets you thinking 'bout her
+Then the last several miles turns into a blur, yeah
+
+I hope you both feel the sparks by the end of the drive
+I hope you know she's the one by the end of the night
+I hope you never ever felt more free
+Tell your friends that you're so happy
+I hope she comes along and wrecks every one of your plans
+I hope you spend your last dime to put a rock on her hand
+I hope she's wilder than your wildest dreams
+She's everything you're ever gonna need
+
+And then I hope she cheats
+Like you did on me
+And then I hope she cheats
+Like you did on me
+
+Yeah, babe, I hope he shows up in a 2:00 a.m. pic from a friend
+Hanging on to a girl to just rub it in
+I hope you stay up all night, all alone, waiting by the phone
+And then he calls
+
+And baby, I (I), I hope you work it out
+Forgive and just about forget
+Let him take you on a first date again
+And when you lean in for a kiss
+
+I hope you both feel the sparks by the end of the drive
+I hope you know he's the one by the end of the night
+I hope you never ever felt more free
+Tell your friends that you're so happy
+I hope he comes along and wrecks every one of your plans
+I hope he spends his last dime to put a rock on your hand
+I hope he's wilder than your wildest dreams
+He's everything you're ever gonna need
+
+And then I hope he cheats
+Like you did on me
+And then I hope he cheats
+Like you did on me
+
+I hope what goes, comes all the way around
+I hope she makes you feel the same way
+About her that I feel about you right now
+
+I hope you both feel the sparks by the end of the drive
+I hope you know she's the one by the end of the night
+I hope you never ever felt more free
+Tell your friends that you're so happy (oh-woah, oh, woah, woah)
+I hope she comes along and wrecks every one of your plans
+I hope you spend your last dime to put a rock on her hand
+I hope she's wilder than your wildest dreams
+She's everything you're ever gonna need
+
+And then I hope she cheats
+Like you did on me
+And then I hope she cheats
+Like you did on me
+
+Like you did on me
+
+@VoiceShazamBot`
+    },
+    {
+      title: "That's Hilarious",
+      artist: "Charlie Puth",
+      lyrics: `Look how all the tables
+Look how all the tables have turned
+Guess you're finally realizin' how bad you messed it up
+Girl, you're only makin'
+Girl, you're only makin' it worse
+When you call like you always do when you want someone
+
+You took away a year
+Of my f- life and I can't get it back no more
+So when I see those tears
+Comin' out your eyes, I hope it's me they're for
+
+You didn't love when you had me
+But now you need me so badly
+You can't be serious
+That's hilarious
+Thinkin' I would still want you
+After the things you put me through
+Yeah, you're delirious
+That's hilarious
+
+Now you put the blame in (now you put the blame in)
+Now you put the blame in reverse
+Tryna make me feel guilty
+For everything you've done
+You're another lesson (you're another lesson)
+You're just another lesson I learned
+Don't give your heart to a girl who still got a broken one
+
+You took away a year (took away a year)
+Of my f- life and I can't get it back no more
+So when I see those tears (when I see those tears)
+Comin' out your eyes, I hope it's me they're for
+
+You didn't love when you had me
+But now you need me so badly
+You can't be serious
+That's hilarious
+Thinkin' I would still want you
+After the things you put me through
+Yeah, you're delirious (you're delirious)
+That's hilarious (that's hilarious)
+
+You didn't love when you had me
+But now you need me so badly
+You can't be serious (you can't be serious)
+That's hilarious (that's hilarious)
+Thinkin' I would still want you
+After the things you put me through
+Yeah, you're delirious (you're delirious)
+That's hilarious (that's hilarious)
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Loser",
+      artist: "Charlie Puth",
+      lyrics: `Oh, I'm such a loser
+How'd I ever lose her?
+Oh, maybe, I must've been out of my mind
+Now, I-I'm a loser
+Why'd I have to lose her?
+I'll never recover, I'll never be fine
+'Cause I-I
+
+I just might get a little too drunk
+So, I won't think about us (uh)
+I don't think about what (uh)
+We could have been, and
+I stay up, like, three or four nights
+So I won't dream about us (uh)
+I wake up with no luck (no)
+I just can't win
+
+I should've seen it all along (uh-uh)
+She was a one in a million (uh-uh)
+It hurts whenever someone says her name (someone says her name)
+When we were goin' off and on (uh-uh)
+I guess I really played it wrong (uh-uh)
+I should've never let her slip away
+
+Oh, I'm such a loser
+How'd I ever lose her?
+Oh, maybe, I must've been out of my mind
+Now, I-I'm a loser
+Why'd I have to lose her?
+I'll never recover, I'll never be fine
+'Cause I-I
+
+Uh, I just might been a little too gone
+When she needed somebody (uh)
+Up against her body (whoa) at 2 a.m.
+Yeah, now I keep lyin' to myself
+But she's just joking probably (she's joking probably)
+She'll probably call me and we'll be us again
+
+I should've seen it all along (uh-uh)
+She was a one in a million (uh-uh)
+Now she's in love, and I'm in second place (damn)
+
+Oh, I'm such a loser
+How'd I ever lose her? (Lose her)
+Oh, maybe, I must've been out of my mind (-ind)
+Now, I-I'm a loser
+Why'd I have to lose her? (Her)
+I'll never recover, I'll never be fine (be fine)
+'Cause I-I, uh
+
+I'm-ma-ma-ma-I
+I'm-ma-ma-ma-I
+I'm-ma-ma-ma, I'm a loser (yeah, I say)
+I'm-ma-ma-ma-I
+I'm-ma-ma-ma (I-I)
+I'm-ma-ma-ma, I'm a loser
+
+Tell me, God is real
+Do you think about me still?
+Or am I livin' for nothing?
+Don't know where it went
+Wrong, but I'll just take the hint
+It's gonna take some adjusting
+
+Oh, I'm such a loser
+How'd I ever lose her?
+Oh, maybe, I must've been out of my mind
+Now, I-I'm a loser (oh!)
+Why'd I have to lose her? (I'll never)
+I'll never recover, I'll never be fine (oh, baby, I)
+'Cause I-I'm a loser
+
+I'm-ma-ma-ma-I
+I'm-ma-ma-ma-I
+I'm-ma-ma-ma, I'm a loser (ah, hey, I say)
+I'm-ma-ma-ma-ma (yeah, I say)
+I'm-ma-ma-ma-ma (yeah, and I say)
+I'm-ma-ma-ma, I'm a loser
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Summer Feelings (feat. Charlie Puth)",
+      artist: "Lennon Stella, Charlie Puth",
+      lyrics: `I hear the rhythm of waves hittin' on the shore
+And I can swear they're speaking, speaking, speaking
+They're telling me to relax, I'm not good at that
+But now I know I need it, need it, need it
+
+'Cause I, ooh, now what you do, nothin' lies, tell the truth (that's right)
+Yeah, on Venice beach, got sand all in my shoes (tonight)
+Ooh, unlock me, loose, see the sunset from the roof (that's right)
+Yeah, that crystal blue, and it came out someone new
+
+Yeah (good), I'm in my summer feelings
+And I'm trying to keep it cool
+Wait (up), here in my summer feeling
+And I found a piece of me that I never knew
+
+You got my heart and I'm head over heels in love
+In California, dreamin', dreamin', dreamin', yeah
+Touchin' the stars and then draggin' them down to earth
+That California, feelin', feelin', feelin' (that's right)
+
+Oh, now what you do, your brown eyes tell the truth (that's right)
+Yeah, down on the beach, I'm stayin' out late for you (tonight)
+Oh, unlock you, loose, see the sunset from the roof (that's right)
+Yeah, you got to me and it came out someone new
+
+Hey, gettin' in my summer feelings (summer feelings)
+(And I) I'm trying to keep it cool
+Wait (up), here in my summer feelings
+(And I) I found a piece of me that I never knew
+
+I'm meltin' like ice cream
+The stress is gone for me
+Nowhere I'd rather be (oh)
+
+Hey (yeah), I'm in my summer feelings
+And I, I'm trying to keep it cool
+Wait (up), here in my summer feelings
+And I found a piece of me that I never knew
+Hey, gettin' in my summer feelings
+(And I) I'm trying to keep the cool
+Wait (uh), here in my summer feelings
+And I found a piece of me that I never knew
+
+@VoiceShazamBot`
+    },
+    {
+      title: "There’s A First Time For Everything",
+      artist: "Charlie Puth",
+      lyrics: `Never thought that I would actually miss you
+Never thought that I'd be dying to kiss you
+But maybe there's a first time for everything
+Thinking 'bout you really mess with my heartbeat
+Never thought that I would cry for somebody
+But maybe there's a first time for everything
+
+Saw her on the TV
+Had the bleach pink hair with the ripped jeans
+And I thought, "What if I could meet her in real life?" (Yeah)
+I found out that we shared friends
+So she came to the house on the weekend
+And what I had in my head happened later that night (yeah)
+
+All I need is one little memory
+To make all these feelings come back up, yeah
+
+Never thought that I would actually miss you
+Never thought that I'd be dying to kiss you
+But maybe there's a first time for everything
+Thinking 'bout you really mess with my heartbeat
+Never thought that I would cry for somebody
+But maybe there's a first time for everything
+
+Stayed up, late night
+We were trying our best to pretend like
+That when the party's done, we'll go our separate ways
+But we knew, yeah, we knew
+Pretty soon, it would be only us two
+Then after what we did, I'd never be the same (yeah)
+
+All I need is one little memory (I need, oh)
+To make all these feelings come back up, yeah
+
+Never thought that I would actually miss you, no
+Never thought that I'd be dying to kiss you
+But maybe there's a first time for everything
+Thinking 'bout you really mess with my heartbeat (mess with my heartbeat)
+Never thought that I would cry for somebody (oh)
+But maybe there's a first time for everything, yeah
+Maybe there's a first time for everything
+
+@VoiceShazamBot`
+    },
+    {
+      title: "Suffer",
+      artist: "Charlie Puth",
+      lyrics: `Torna-, Tornado
+Baby, oh, you blow my mind
+You tell me wait, wait on ya
+But baby, I can't wait all night
+I go through pictures you sent before
+Oh stop tempting me
+You know what I want
+I wanna make, wanna make love
+Girl, I can't lie
+
+I'm just a sucker
+For a cold-hearted lover
+You make me suffer
+You make me suffer
+Don't keep me waiting
+You should come over
+Don't make me suffer
+Don't make me suffer
+
+So here we go, go again
+It's like I'm caught under your spell
+You're wearing black, black magic
+Well baby, don't wear nothing else
+When I open up this door
+Don't you play
+Ain't no other man gon' make you feel the same
+I wanna make, wanna make love
+Girl, I can't lie
+
+I'm just a sucker
+For a cold-hearted lover
+You make me suffer
+You make me suffer
+Don't keep me waiting
+You should come over
+Don't make me suffer
+Don't make me suffer
+
+I hate it when you get your way
+But we love you, we love you, baby
+Some things don't ever change
+You make me suffer, baby
+You, oh
+
+I'm just a sucker
+For a cold-hearted lover
+You make me suffer
+You make me suffer
+Don't keep me waiting
+You should come over
+Don't make me suffer
+Don't make me suffer
+
+@VoiceShazamBot`
+    }
+  ];
+
+  // ------------------------------------------------------------
+  //   render songs + copy functionality
+  // ------------------------------------------------------------
+  const grid = document.getElementById('songsGrid');
+  const toast = document.getElementById('toast');
+  let toastTimer = null;
+
+  function showToast(message = '✅ Copied to clipboard!') {
+    toast.textContent = message;
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
+  }
+
+  // copy text helper
+  async function copyTextToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('✅ Lyrics copied!');
+    } catch (err) {
+      // fallback
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('✅ Lyrics copied!');
+    }
+  }
+
+  // build all cards
+  songsData.forEach((song, index) => {
+    const card = document.createElement('div');
+    card.className = 'song-card';
+    card.dataset.index = index;
+
+    // header
+    const header = document.createElement('div');
+    header.className = 'song-header';
+
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'song-title';
+    titleWrap.innerHTML = `${escapeHtml(song.title)} <span class="artist">— ${escapeHtml(song.artist)}</span>`;
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-single';
+    copyBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> copy`;
+    copyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      copyTextToClipboard(song.lyrics);
+    });
+
+    header.appendChild(titleWrap);
+    header.appendChild(copyBtn);
+
+    // lyrics box
+    const lyricsBox = document.createElement('div');
+    lyricsBox.className = 'lyrics-box';
+    lyricsBox.textContent = song.lyrics;
+
+    card.appendChild(header);
+    card.appendChild(lyricsBox);
+    grid.appendChild(card);
+  });
+
+  // helper escape
+  function escapeHtml(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // copy all lyrics (concatenated with song titles)
+  document.getElementById('copyAllBtn').addEventListener('click', async () => {
+    let allText = '';
+    songsData.forEach((song, i) => {
+      allText += `🎵 ${song.title} — ${song.artist}\n\n${song.lyrics}\n\n${i < songsData.length - 1 ? '────────────────────\n\n' : ''}`;
+    });
+    await copyTextToClipboard(allText);
+    showToast('📋 All lyrics copied!');
+  });
+
+  // optional: fix any missing newline at end
+  console.log('Lyrics library ready —', songsData.length, 'tracks');
+</script>
+</body>
+</html>

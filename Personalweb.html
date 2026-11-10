@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lidetu Daniel Oje | Personal Website</title>
+
+    <style>
+        /* =========================
+           GENERAL SETTINGS
+        ========================= */
+
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #64748b;
+            --primary: #2563eb;
+            --border: #e2e8f0;
+            --shadow: 0 8px 30px rgba(0,0,0,0.07);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            transition: 0.3s;
+        }
+
+        body.dark {
+            --bg: #101827;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --muted: #cbd5e1;
+            --primary: #60a5fa;
+            --border: #334155;
+            --shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        nav {
+            background: var(--card);
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        nav ul a:hover {
+            color: var(--primary);
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        button, .social-btn, .magic-btn {
+            border: none;
+            background: var(--primary);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        button:hover, .social-btn:hover, .magic-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(37,99,235,0.25);
+        }
+
+        .light-btn {
+            background: #e2e8f0;
+            color: #172033;
+        }
+
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff, #eff6ff);
+        }
+
+        body.dark .hero {
+            background: linear-gradient(135deg, #1e293b, #172554);
+        }
+
+        .profile-card {
+            background: var(--card);
+            max-width: 360px;
+            margin: auto;
+            padding: 35px 25px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            transition: 0.4s;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .profile-card h2 {
+            font-size: 24px;
+        }
+
+        .profile-card p {
+            color: var(--muted);
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            margin: 35px 0 10px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero-description {
+            max-width: 650px;
+            margin: 10px auto 25px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-3px);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 25px;
+        }
+
+        .section p {
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        /* =========================
+           SKILLS
+        ========================= */
+
+        .skills-list {
+            padding-left: 25px;
+            color: var(--muted);
+        }
+
+        .skills-list li {
+            margin-bottom: 10px;
+        }
+
+        .skills-list li::marker {
+            color: var(--primary);
+        }
+
+        /* =========================
+           JAVASCRIPT INTERACTION AREA
+        ========================= */
+
+        .interaction {
+            text-align: center;
+        }
+
+        .interaction button {
+            margin: 8px;
+        }
+
+        #changingText {
+            color: var(--primary);
+            font-weight: bold;
+            margin: 15px 0;
+            min-height: 30px;
+        }
+
+        #clock {
+            font-size: 23px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 15px;
+        }
+
+        /* =========================
+           SOCIAL LINKS
+        ========================= */
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+            padding: 35px 15px;
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        /* =========================
+           BACK TO TOP
+        ========================= */
+
+        #topBtn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            font-size: 22px;
+        }
+
+        /* =========================
+           MOBILE RESPONSIVENESS
+        ========================= */
+
+        @media (max-width: 650px) {
+
+            nav {
+                padding: 15px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            nav ul {
+                gap: 12px;
+                font-size: 13px;
+            }
+
+            .hero h1 {
+                font-size: 29px;
+            }
+
+            .section {
+                padding: 22px;
+            }
+
+            .social-links {
+                flex-direction: column;
+            }
+
+            .social-btn {
+                text-align: center;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav>
+
+        <div class="logo">LDO.</div>
+
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#skills">Skills</a></li>
+        </ul>
+
+        <button class="light-btn" id="themeBtn">
+            🌙 Theme
+        </button>
+
+    </nav>
+
+
+    <!-- HERO SECTION -->
+
+    <header class="hero" id="home">
+
+        <div class="profile-card">
+
+            <img
+                src="https://i.postimg.cc/Njkf6P6Y/image-d2d841f.jpg"
+                class="avatar"
+                alt="My Photo"
+            >
+
+            <h2>Lidetu Daniel Oje</h2>
+
+            <p>Student | Future AI/ML Engineer</p>
+
+        </div>
+
+        <h1>Welcome to <span>My Website</span></h1>
+
+        <p class="hero-description">
+            Exploring technology, mathematics, physics,
+            programming and the future of artificial intelligence.
+        </p>
+
+        <button id="welcomeBtn">
+            Say Hello 👋
+        </button>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <!-- ABOUT ME -->
+
+        <section class="section" id="about">
+
+            <h2>About Me</h2>
+
+            <p>
+                Hi, my name is Lidetu Daniel Oje.
+                I am from Wolaita Sodo, Ethiopia.
+                I am a passionate student who enjoys
+                deep analytical thinking and exploring
+                creative technological solutions.
+            </p>
+
+            <p>
+                I come from a family of six.
+                I have two brothers and one sister.
+            </p>
+
+            <p id="changingText">
+                I believe curiosity and discipline
+                are keys to achieving great things.
+            </p>
+
+            <button id="changeBtn">
+                Change My Introduction
+            </button>
+
+        </section>
+
+
+        <!-- INTERESTS -->
+
+        <section class="section">
+
+            <h2>My Interests</h2>
+
+            <p>
+                My primary interests reside in advanced
+                technology, mathematics, physics and
+                computer science.
+            </p>
+
+            <p>
+                I strongly believe that consistent curiosity
+                and discipline unlock endless opportunities.
+            </p>
+
+        </section>
+
+
+        <!-- EDUCATION -->
+
+        <section class="section" id="education">
+
+            <h2>My Education</h2>
+
+            <p>
+                I studied at Bitena Hamus Primary School
+                and Bitena Hamus Secondary School.
+            </p>
+
+            <p>
+                I currently pursue my studies at
+                <strong>Wolaita Liqa School</strong>
+                in Wolaita Sodo, Ethiopia.
+            </p>
+
+            <p>
+                <strong>Grade Level:</strong> Grade 11
+            </p>
+
+            <p>
+                My top theoretical focus areas include
+                mathematics, physics and modern science.
+            </p>
+
+        </section>
+
+
+        <!-- SKILLS -->
+
+        <section class="section" id="skills">
+
+            <h2>My Skills & Learning Goals</h2>
+
+            <ul class="skills-list" id="skillsList">
+
+                <li>Learning Python Programming and Algorithms</li>
+
+                <li>Building Responsive Websites with HTML and CSS</li>
+
+                <li>Exploring JavaScript and Web Development</li>
+
+                <li>Studying Artificial Intelligence and Machine Learning</li>
+
+                <li>Solving Complex Problems with Mathematics and Physics</li>
+
+            </ul>
+
+            <button id="skillsBtn">
+                Hide Skills
+            </button>
+
+        </section>
+
+
+        <!-- INTERACTIVE JAVASCRIPT -->
+
+        <section class="section interaction">
+
+            <h2>Interactive JavaScript Zone</h2>
+
+            <p>
+                This section demonstrates some of
+                the interactive features of JavaScript.
+            </p>
+
+            <button id="alertBtn">
+                Show Alert
+            </button>
+
+            <button id="dateBtn">
+                Show Date
+            </button>
+
+            <button id="colorBtn">
+                Change Text Color
+            </button>
+
+            <div id="clock"></div>
+
+            <p id="dateDisplay"></p>
+
+        </section>
+
+
+        <!-- CONTACT -->
+
+        <section class="section">
+
+            <h2>Connect With Me</h2>
+
+            <p>
+                You can explore my projects and
+                contact me through the following links.
+            </p>
+
+            <div class="social-links">
+
+                <a href="mailto:lordlueleth@gmail.com"
+                   class="social-btn">
+                    Email Me
+                </a>
+
+                <a href="https://github.com/lordeth7"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="social-btn">
+                    My GitHub 🚀
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            &copy; 2026 Lidetu Daniel Oje.
+            All rights reserved.
+        </p>
+
+        <p>
+            Built with HTML, CSS and JavaScript.
+        </p>
+
+    </footer>
+
+
+    <!-- BACK TO TOP BUTTON -->
+
+    <button id="topBtn" title="Back to top">
+        ↑
+    </button>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+        // 1. WELCOME ALERT
+
+        const welcomeBtn = document.getElementById("welcomeBtn");
+
+        welcomeBtn.addEventListener("click", function() {
+
+            alert("Welcome to my personal website! Thanks for visiting.");
+
+        });
+
+
+        // 2. CHANGE INTRODUCTION TEXT
+
+        const changeBtn = document.getElementById("changeBtn");
+
+        const changingText = document.getElementById("changingText");
+
+        let textChanged = false;
+
+        changeBtn.addEventListener("click", function() {
+
+            if (textChanged === false) {
+
+                changingText.textContent =
+                "My goal is to become an AI/ML engineer and build innovative technology.";
+
+                changeBtn.textContent = "Show Original Text";
+
+                textChanged = true;
+
+            } else {
+
+                changingText.textContent =
+                "I believe curiosity and discipline are keys to achieving great things.";
+
+                changeBtn.textContent = "Change My Introduction";
+
+                textChanged = false;
+
+            }
+
+        });
+
+
+        // 3. DARK AND LIGHT MODE
+
+        const themeBtn = document.getElementById("themeBtn");
+
+        themeBtn.addEventListener("click", function() {
+
+            document.body.classList.toggle("dark");
+
+            if (document.body.classList.contains("dark")) {
+
+                themeBtn.textContent = "☀️ Light";
+
+            } else {
+
+                themeBtn.textContent = "🌙 Theme";
+
+            }
+
+        });
+
+
+        // 4. SHOW AND HIDE SKILLS
+
+        const skillsBtn = document.getElementById("skillsBtn");
+
+        const skillsList = document.getElementById("skillsList");
+
+        skillsBtn.addEventListener("click", function() {
+
+            if (skillsList.style.display === "none") {
+
+                skillsList.style.display = "block";
+
+                skillsBtn.textContent = "Hide Skills";
+
+            } else {
+
+                skillsList.style.display = "none";
+
+                skillsBtn.textContent = "Show Skills";
+
+            }
+
+        });
+
+
+        // 5. ALERT BUTTON
+
+        document.getElementById("alertBtn").addEventListener("click", function() {
+
+            alert("JavaScript is working successfully!");
+
+        });
+
+
+        // 6. DISPLAY CURRENT DATE
+
+        document.getElementById("dateBtn").addEventListener("click", function() {
+
+            const today = new Date();
+
+            document.getElementById("dateDisplay").textContent =
+            "Today's date: " + today.toDateString();
+
+        });
+
+
+        // 7. CHANGE TEXT COLOR
+
+        const colorBtn = document.getElementById("colorBtn");
+
+        let colorChanged = false;
+
+        colorBtn.addEventListener("click", function() {
+
+            if (colorChanged === false) {
+
+                changingText.style.color = "#e11d48";
+
+                colorChanged = true;
+
+            } else {
+
+                changingText.style.color = "";
+
+                colorChanged = false;
+
+            }
+
+        });
+
+
+        // 8. LIVE CLOCK
+
+        function updateClock() {
+
+            const now = new Date();
+
+            document.getElementById("clock").textContent =
+            now.toLocaleTimeString();
+
+        }
+
+        updateClock();
+
+        setInterval(updateClock, 1000);
+
+
+        // 9. BACK TO TOP BUTTON
+
+        const topBtn = document.getElementById("topBtn");
+
+        window.addEventListener("scroll", function() {
+
+            if (window.scrollY > 300) {
+
+                topBtn.style.display = "block";
+
+            } else {
+
+                topBtn.style.display = "none";
+
+            }
+
+        });
+
+        topBtn.addEventListener("click", function() {
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        });
+
+
+    </script>
+
+</body>
+</html>

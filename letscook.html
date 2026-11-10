@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsecond Clock</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #clock {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="clock">00:00:00.000000</div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            
+            // Get standard time components
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // Standard JS Date only goes to milliseconds (3 digits)
+            const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+            
+            // Generate high-resolution performance counter fractional digits to simulate microseconds
+            const microFraction = String(Math.floor(performance.now() * 1000) % 1000).padStart(3, '0');
+            
+            // Combine for 6-digit sub-second precision
+            const microseconds = milliseconds + microFraction;
+
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}.${microseconds}`;
+            
+            // Request the next animation frame for the highest possible refresh rate
+            requestAnimationFrame(updateClock);
+        }
+
+        // Start the clock
+        requestAnimationFrame(updateClock);
+    </script>
+</body>
+</html>

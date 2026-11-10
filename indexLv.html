@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lidetu Daniel Oje | Personal Profile</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 31, 48, 0.7);
+            --card-border: rgba(56, 189, 248, 0.15);
+            --primary-glow: #00f2fe;
+            --secondary-glow: #4facfe;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --highlight: #38bdf8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Header Section */
+        header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 40px 30px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1100px;
+            margin: 20px auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-glow);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .header-content h1 {
+            font-size: 38px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-glow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-content .subtitle {
+            font-size: 18px;
+            color: var(--highlight);
+            font-weight: 600;
+            min-height: 28px;
+        }
+
+        .header-content .welcome-text {
+            color: var(--text-sub);
+            font-size: 15px;
+            margin-top: 4px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(15px);
+            max-width: 750px; 
+            margin: 0 auto 30px auto;
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        nav a {
+            color: var(--text-sub);
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            display: inline-block;
+        }
+
+        nav a:hover {
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+        }
+
+        /* Main Body Content */
+        main {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: var(--primary-glow);
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 20px;
+            background: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow));
+            border-radius: 4px;
+        }
+
+        p {
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 5px;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        ul li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--primary-glow);
+            font-size: 14px;
+        }
+
+        .highlight {
+            color: var(--primary-glow);
+            font-weight: 600;
+            background: rgba(0, 242, 254, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        /* Social & Contact Links Styles */
+        .social-links-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 24px;
+            background: rgba(30, 41, 59, 0.8);
+            color: var(--primary-glow);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            color: #0b0f19;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            margin-top: 40px;
+            background: rgba(11, 15, 25, 0.95);
+            border-top: 1px solid var(--card-border);
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        /* --- AI CHATBOT STYLES --- */
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            border: none;
+            color: #0b0f19;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 95px;
+            right: 25px;
+            width: 360px;
+            height: 480px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .chat-container.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .chat-header {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h3 {
+            font-size: 16px;
+            color: var(--primary-glow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-header h3::before {
+            content: '🤖';
+        }
+
+        .close-chat-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .bot-message {
+            background: rgba(30, 41, 59, 0.9);
+            color: var(--text-main);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            color: #0b0f19;
+            font-weight: 500;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-suggestions {
+            padding: 8px 12px;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .suggestion-chip {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--highlight);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid var(--card-border);
+            gap: 8px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--card-border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            color: var(--text-main);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chat-input-area button {
+            background: var(--primary-glow);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: #0b0f19;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 650px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+            }
+
+            .header-content h1 {
+                font-size: 30px;
+            }
+
+            nav {
+                width: 90%;
+                padding: 10px;
+            }
+
+            nav a {
+                margin: 5px 6px;
+                font-size: 13px;
+            }
+
+            .glass-card {
+                padding: 20px;
+            }
+
+            .chat-container {
+                width: calc(100% - 40px);
+                right: 20px;
+                bottom: 90px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="profile-container">
+            <!-- Photo Updated to your Imgur/Postimages link -->
+            <img src="https://i.postimg.cc/Njkf6P6Y/image-d2d841f.jpg" alt="Lidetu Daniel Oje Profile Picture" class="profile-img">
+        </div>
+        <div class="header-content">
+            <h1>Lidetu Daniel Oje</h1>
+            <div class="subtitle">Student | AI/ML Engineer</div>
+            <p class="welcome-text">Welcome to my personal dynamic portfolio!</p>
+        </div>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#goals">Goals</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <main>
+
+        <section id="about" class="glass-card">
+            <h2>About Me</h2>
+            <p>
+                My name is <span class="highlight">Lidetu Daniel Oje</span>.
+                I am from Bitena town, Duguna Fango, Ethiopia.
+                I am a passionate student who enjoys deep analytical thinking and exploring creative tech solutions.
+            </p>
+            <p>
+                My primary interests reside in advanced technology, mathematics, physics, and computer science. I strongly believe that consistent curiosity and discipline unlock endless doors.
+            </p>
+        </section>
+
+        <section id="education" class="glass-card">
+            <h2>My Education</h2>
+            <p>
+                I studied at Bitena Hamus Primary School and Bitena Hamus Secondary School. I currently pursue my studies at <span class="highlight">Wolaita Liqa School</span> in Wolaita Sodo, Ethiopia.
+            </p>
+            <p>
+                <strong>Grade Level:</strong> Grade 11
+            </p>
+            <p>
+                My top theoretical focus areas include advanced mathematics, physics, and modern science disciplines.
+            </p>
+        </section>
+
+        <section id="skills" class="glass-card">
+            <h2>My Interests & Skills</h2>
+            <ul>
+                <li>Learning Python Programming & Algorithms</li>
+                <li>Building Modern Responsive Websites (HTML & CSS)</li>
+                <li>Exploring Interactive JavaScript & Web Functionalities</li>
+                <li>Studying Artificial Intelligence & Machine Learning Frameworks</li>
+                <li>Solving Complex Problems with Mathematics & Physics</li>
+            </ul>
+        </section>
+
+        <section id="goals" class="glass-card">
+            <h2>My Future Goals</h2>
+            <p>
+                My primary dream is to become a top-tier
+                <span class="highlight">Artificial Intelligence & Machine Learning Engineer</span>.
+            </p>
+            <p>
+                I aim to build innovative software solutions, found an impactful enterprise, achieve financial independence, empower my family, and contribute positively to society.
+            </p>
+            <p>
+                I hold a steadfast belief that persistence, knowledge, faith, and continuous daily improvement lead to success.
+            </p>
+        </section>
+
+        <!-- Social & Contact Links Section -->
+        <section id="contact" class="glass-card">
+            <h2>Social & Contact Links</h2>
+            <p>Feel free to connect with me or reach out for collaborations!</p>
+            <div class="social-links-container">
+                
+                <!-- GitHub Link -->
+                <a href="https://github.com/lordeth7" target="_blank" class="social-btn">GitHub</a>
+                
+                <!-- Email Link -->
+                <a href="mailto:lordlueleth@gmail.com" class="social-btn">Email Me</a>
+                
+                <!-- LinkedIn Placeholder -->
+                <a href="#" target="_blank" class="social-btn">LinkedIn</a>
+                
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Lidetu Daniel Oje. All rights reserved.</p>
+        <p>Built with Passion, HTML, CSS, and Interactive JS.</p>
+    </footer>
+
+    <!-- AI Chatbot Floating UI -->
+    <button class="chat-toggle-btn" id="chatToggle" title="Ask AI Assistant">💬</button>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <h3>Daniel's Assistant</h3>
+            <button class="close-chat-btn" id="chatClose">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                Hello! I am Lidetu's AI Assistant. Ask me anything about his skills, goals, or background!
+            </div>
+        </div>
+        <div class="chat-suggestions">
+            <span class="suggestion-chip" onclick="quickAsk('Who is Daniel?')">Who is Lidetu?</span>
+            <span class="suggestion-chip" onclick="quickAsk('What are your goals?')">Your goals?</span>
+            <span class="suggestion-chip" onclick="quickAsk('What is your email?')">Email?</span>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Ask something..." onkeydown="handleKeyPress(event)">
+            <button onclick="sendMessage()">➔</button>
+        </div>
+    </div>
+
+    <!-- Minimal JS for Chatbot only -->
+    <script>
+        const chatToggle = document.getElementById('chatToggle');
+        const chatContainer = document.getElementById('chatContainer');
+        const chatClose = document.getElementById('chatClose');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+
+        chatToggle.addEventListener('click', () => {
+            chatContainer.classList.toggle('active');
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatContainer.classList.remove('active');
+        });
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function quickAsk(text) {
+            chatInput.value = text;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const query = chatInput.value.trim();
+            if (query === '') return;
+
+            appendMessage(query, 'user-message');
+            chatInput.value = '';
+
+            setTimeout(() => {
+                const response = getAIResponse(query);
+                appendMessage(response, 'bot-message');
+            }, 400);
+        }
+
+        function appendMessage(text, className) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${className}`;
+            msgDiv.innerText = text;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getAIResponse(text) {
+            const input = text.toLowerCase();
+
+            if (input.includes('who') || input.includes('name') || input.includes('daniel') || input.includes('lidetu')) {
+                return "Lidetu Daniel Oje is a Grade 11 student from Bitena town, Duguna Fango, Ethiopia, studying at Wolaita Liqa School.";
+            } else if (input.includes('goal') || input.includes('future') || input.includes('dream')) {
+                return "Lidetu's dream is to become an AI & Machine Learning Engineer, start an impactful company, and achieve financial independence!";
+            } else if (input.includes('skill') || input.includes('python') || input.includes('code') || input.includes('program')) {
+                return "Lidetu is learning Python, JavaScript, and building web projects with HTML & CSS while studying AI concepts!";
+            } else if (input.includes('school') || input.includes('education') || input.includes('grade')) {
+                return "Lidetu currently studies Grade 11 at Wolaita Liqa School in Wolaita Sodo, focusing on Physics, Maths, and Sciences.";
+            } else if (input.includes('contact') || input.includes('email') || input.includes('reach')) {
+                return "You can reach Lidetu at lordlueleth@gmail.com or check out his GitHub at github.com/lordeth7!";
+            } else if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+                return "Hello! How can I help you learn more about Lidetu Daniel Oje today?";
+            } else if (input.includes('philosophy') || input.includes('think')) {
+                return "Lidetu believes difficult problems lead to new discoveries, and through continuous effort, any problem can be solved.";
+            } else {
+                return "That's an interesting question! Lidetu is focused on technology, AI/ML engineering, mathematics, and building digital solutions.";
+            }
+        }
+    </script>
+
+</body>
+</html>
